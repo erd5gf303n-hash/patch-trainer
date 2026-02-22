@@ -1,149 +1,20 @@
 [
-  { "id": 1, "prompt": "保存ボタンで、ThisItem の Status を「完了」に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})", "focus": "Patch基本形", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 2, "prompt": "保存ボタンで、ThisItem の Title を「テスト」に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:\"テスト\"})", "focus": "単一列更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 3, "prompt": "保存ボタンで、ThisItem の Status を txtStatus.Text で更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:txtStatus.Text})", "focus": "入力値更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 4, "prompt": "保存ボタンで、ThisItem の Title を txtTitle.Text で更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text})", "focus": "入力値更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 5, "prompt": "保存ボタンで、ID=1 の Status を「完了」に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})", "focus": "LookUp=レコード", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 6, "prompt": "保存ボタンで、ID=varID の Title を txtTitle.Text に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=varID), {Title:txtTitle.Text})", "focus": "変数で対象指定", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 7, "prompt": "保存ボタンで、Title=\"A\" の Status を「対応中」に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, Title=\"A\"), {Status:\"対応中\"})", "focus": "条件で1件特定", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 8, "prompt": "保存ボタンで、Status=\"未\" の先頭1件を「対応中」に更新せよ。", "expected": "Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"対応中\"})", "focus": "Filter=テーブル→First", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 9, "prompt": "新規作成ボタンで、Title=\"新規\" Status=\"未\" の行を作成せよ。", "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"新規\", Status:\"未\"})", "focus": "Defaults=新規", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 10, "prompt": "新規作成ボタンで、Title=txtTitle.Text Status=\"未\" の行を作成せよ。", "expected": "Patch(Tasks, Defaults(Tasks), {Title:txtTitle.Text, Status:\"未\"})", "focus": "入力で新規", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 11, "prompt": "保存ボタンで、ThisItem の Status を Coalesce(txtStatus.Text,\"未\") で更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:Coalesce(txtStatus.Text,\"未\")})", "focus": "空対策", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 12, "prompt": "保存ボタンで、ThisItem の Title を Coalesce(txtTitle.Text,\"(なし)\") で更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:Coalesce(txtTitle.Text,\"(なし)\")})", "focus": "空対策", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 13, "prompt": "保存ボタンで、ThisItem を完了に更新し、戻り値を vUpdated に保存せよ。", "expected": "Set(vUpdated, Patch(Tasks, ThisItem, {Status:\"完了\"}))", "focus": "Patch戻り値=レコード", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 14, "prompt": "保存ボタンで、ID=varID を完了に更新し、更新後IDを vLastID に保存せよ（2文）。", "expected": "Set(vRec, Patch(Tasks, LookUp(Tasks, ID=varID), {Status:\"完了\"})); Set(vLastID, vRec.ID)", "focus": "セミコロン連結", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 15, "prompt": "保存ボタンで、varID が空なら新規、空でなければ更新（Title=txtTitle.Text）せよ。", "expected": "If(IsBlank(varID), Patch(Tasks, Defaults(Tasks), {Title:txtTitle.Text}), Patch(Tasks, LookUp(Tasks, ID=varID), {Title:txtTitle.Text}))", "focus": "新規/更新分岐", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 16, "prompt": "保存ボタンで、IsEdit=trueなら更新、falseなら新規（Status=\"未\"）せよ。", "expected": "If(IsEdit, Patch(Tasks, ThisItem, {Status:\"未\"}), Patch(Tasks, Defaults(Tasks), {Status:\"未\"}))", "focus": "ブール分岐", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 17, "prompt": "保存ボタンで、ThisItem の Title を \"案件-\" & ThisItem.ID に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:\"案件-\" & ThisItem.ID})", "focus": "文字結合", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 18, "prompt": "保存ボタンで、ThisItem の Status を If(IsBlank(txtStatus.Text),\"未\",txtStatus.Text) で更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:If(IsBlank(txtStatus.Text),\"未\",txtStatus.Text)})", "focus": "Ifでデフォルト", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 19, "prompt": "チェックON時（想定）に、ThisItem の Completed を true に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Completed:true})", "focus": "Bool更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 20, "prompt": "チェックOFF時（想定）に、ThisItem の Completed を false に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Completed:false})", "focus": "Bool更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 21, "prompt": "保存ボタンで、Deadline を DateAdd(Today(),7,Days) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Deadline:DateAdd(Today(),7,Days)})", "focus": "日付更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 22, "prompt": "保存ボタンで、UpdatedAt を Now() に更新せよ。", "expected": "Patch(Tasks, ThisItem, {UpdatedAt:Now()})", "focus": "日時更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 23, "prompt": "保存ボタンで、Priority を Value(txtPriority.Text) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Priority:Value(txtPriority.Text)})", "focus": "文字→数値", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 24, "prompt": "保存ボタンで、Assignee を drpAssignee.Selected.Value に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Assignee:drpAssignee.Selected.Value})", "focus": "ドロップダウン値", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 25, "prompt": "保存ボタンで、ID=varID の Status を \"保留\" に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=varID), {Status:\"保留\"})", "focus": "ID特定", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 26, "prompt": "保存ボタンで、Title=\"A\" の Title を \"A(更新)\" に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, Title=\"A\"), {Title:\"A(更新)\"})", "focus": "同列更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 27, "prompt": "保存ボタンで、Status=\"未\" の先頭1件を完了に更新し、その戻り値を vDone に保存せよ。", "expected": "Set(vDone, Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"完了\"}))", "focus": "First+Set", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 28, "prompt": "保存ボタンで、ThisItem を完了にして Notify(\"更新しました\") を出せ（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Notify(\"更新しました\")", "focus": "Patch→Notify", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 29, "prompt": "保存ボタンで、ThisItem の Title と Status を同時に更新せよ（Title=txtTitle.Text, Status=\"未\"）。", "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text, Status:\"未\"})", "focus": "複数列更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 30, "prompt": "保存ボタンで、ID=1 の Title を \"A\"、Status を \"未\" に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Title:\"A\", Status:\"未\"})", "focus": "複数列更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 31, "prompt": "一括完了ボタンで、colSelected（ID列あり）を全部完了に更新せよ。", "expected": "ForAll(colSelected, Patch(Tasks, LookUp(Tasks, ID=ThisRecord.ID), {Status:\"完了\"}))", "focus": "ForAll一括", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 32, "prompt": "一括更新ボタンで、colSelected の各行の Title を ThisRecord.Title で更新せよ。", "expected": "ForAll(colSelected, Patch(Tasks, LookUp(Tasks, ID=ThisRecord.ID), {Title:ThisRecord.Title}))", "focus": "ThisRecord参照", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 33, "prompt": "一括完了ボタンで、Status=\"未\" の全件を完了に更新せよ。", "expected": "ForAll(Filter(Tasks, Status=\"未\"), Patch(Tasks, ThisRecord, {Status:\"完了\"}))", "focus": "Filter結果を全件更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 34, "prompt": "一括対応中ボタンで、Title が \"A\" または \"B\" の先頭1件を対応中に更新せよ。", "expected": "Patch(Tasks, First(Filter(Tasks, Title=\"A\" || Title=\"B\")), {Status:\"対応中\"})", "focus": "OR条件+First", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 35, "prompt": "誤り修正：Patch(Tasks, Filter(Tasks, ID=1), {Status:\"完了\"}) を正しく直せ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})", "focus": "Filterはテーブル", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 36, "prompt": "誤り修正：Patch(Tasks, Filter(Tasks, Status=\"未\"), {Status:\"完了\"}) を先頭1件更新に直せ。", "expected": "Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"完了\"})", "focus": "Firstが必要", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 37, "prompt": "誤り修正：Patch(Tasks, ThisItem.ID, {Status:\"完了\"}) を直せ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})", "focus": "第2引数はレコード", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 38, "prompt": "誤り修正：Patch(Tasks, Defaults(Tasks), Title:\"X\") を正しく直せ。", "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"X\"})", "focus": "更新内容はレコード{}", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 39, "prompt": "画面表示時に1回だけ、Title=\"下書き\" Status=\"未\" の行を自動作成したい。", "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"下書き\", Status:\"未\"})", "focus": "初期下書き作成", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-  { "id": 40, "prompt": "画面表示時に1回だけ、パラメータ varID が空なら新規作成（Title=\"新規\"）したい。", "expected": "If(IsBlank(varID), Patch(Tasks, Defaults(Tasks), {Title:\"新規\"}), false)", "focus": "OnVisibleで条件付き作成", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-
-  { "id": 41, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に、UpdatedAt を Now() に同時更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", UpdatedAt:Now()})", "focus": "複数列更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 42, "prompt": "保存ボタンで、ThisItem の Title を Trim(txtTitle.Text) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:Trim(txtTitle.Text)})", "focus": "前後空白除去", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 43, "prompt": "保存ボタンで、ThisItem の Status を Upper(txtStatus.Text) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:Upper(txtStatus.Text)})", "focus": "大文字化", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 44, "prompt": "保存ボタンで、ThisItem の Status を Lower(txtStatus.Text) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:Lower(txtStatus.Text)})", "focus": "小文字化", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 45, "prompt": "保存ボタンで、ThisItem の Notes を Coalesce(txtNotes.Text, \"\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Notes:Coalesce(txtNotes.Text, \"\")})", "focus": "Blank→空文字", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 46, "prompt": "保存ボタンで、ThisItem の Status を Switch(drpStatus.Selected.Value, \"未\",\"未\",\"完了\",\"完了\",\"保留\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:Switch(drpStatus.Selected.Value,\"未\",\"未\",\"完了\",\"完了\",\"保留\")})", "focus": "Switchで正規化", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 47, "prompt": "保存ボタンで、ThisItem の Priority を If(Value(txtPriority.Text)>3,3,Value(txtPriority.Text)) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Priority:If(Value(txtPriority.Text)>3,3,Value(txtPriority.Text))})", "focus": "上限を付ける", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 48, "prompt": "保存ボタンで、ThisItem の Flag を Not(ThisItem.Flag) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Flag:Not(ThisItem.Flag)})", "focus": "トグル", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 49, "prompt": "保存ボタンで、ThisItem の Status を If(ThisItem.Status=\"未\",\"対応中\",\"未\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:If(ThisItem.Status=\"未\",\"対応中\",\"未\")})", "focus": "状態切替", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 50, "prompt": "保存ボタンで、ThisItem の Status を Concatenate(\"状態:\", txtStatus.Text) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:Concatenate(\"状態:\",txtStatus.Text)})", "focus": "Concatenate", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 51, "prompt": "保存ボタンで、ID=varID の Deadline を DateAdd(Today(), Value(txtDays.Text), Days) に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=varID), {Deadline:DateAdd(Today(), Value(txtDays.Text), Days)})", "focus": "日数入力", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 52, "prompt": "保存ボタンで、ID=varID の UpdatedAt を Now() に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=varID), {UpdatedAt:Now()})", "focus": "日時更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 53, "prompt": "保存ボタンで、ThisItem の Title を \"[\" & ThisItem.Status & \"] \" & ThisItem.Title に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:\"[\" & ThisItem.Status & \"] \" & ThisItem.Title})", "focus": "複合文字列", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 54, "prompt": "保存ボタンで、ThisItem の Status を Trim(Lower(txtStatus.Text)) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:Trim(Lower(txtStatus.Text))})", "focus": "正規化", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 55, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" にし、同時に Completed を true に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", Completed:true})", "focus": "連動更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 56, "prompt": "保存ボタンで、ThisItem の Status を \"未\" にし、Completed を false に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"未\", Completed:false})", "focus": "連動更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 57, "prompt": "保存ボタンで、ThisItem の Counter を ThisItem.Counter + 1 に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Counter:ThisItem.Counter + 1})", "focus": "インクリメント", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 58, "prompt": "保存ボタンで、ThisItem の Counter を Max(0, ThisItem.Counter - 1) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Counter:Max(0, ThisItem.Counter - 1)})", "focus": "デクリメント", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 59, "prompt": "画面表示時に、期限切れ（Deadline<Today()）の全件へ Overdue=true を付けたい。", "expected": "ForAll(Filter(Tasks, Deadline < Today()), Patch(Tasks, ThisRecord, {Overdue:true}))", "focus": "OnVisible一括フラグ", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-  { "id": 60, "prompt": "画面表示時に、Status=\"完了\" の全件へ Archived=true を付けたい。", "expected": "ForAll(Filter(Tasks, Status=\"完了\"), Patch(Tasks, ThisRecord, {Archived:true}))", "focus": "OnVisible一括", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-
-  { "id": 61, "prompt": "保存ボタンで、ThisItem の Status を drpStatus.Selected.Value に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:drpStatus.Selected.Value})", "focus": "選択値更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 62, "prompt": "保存ボタンで、ThisItem の Category を drpCategory.Selected.Value に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Category:drpCategory.Selected.Value})", "focus": "選択値更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 63, "prompt": "保存ボタンで、ThisItem の Status を If(chkUrgent.Value,\"至急\",\"通常\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:If(chkUrgent.Value,\"至急\",\"通常\")})", "focus": "チェック分岐", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 64, "prompt": "保存ボタンで、ThisItem の Memo を Substitute(txtMemo.Text, \"\\n\", \" \") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Memo:Substitute(txtMemo.Text, \"\\n\", \" \")})", "focus": "改行置換", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 65, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、同時に DoneAt を Now() に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", DoneAt:Now()})", "focus": "完了時刻", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 66, "prompt": "保存ボタンで、ThisItem の DoneAt を Blank() に戻せ（Status=\"未\" も一緒）。", "expected": "Patch(Tasks, ThisItem, {Status:\"未\", DoneAt:Blank()})", "focus": "Blank()でクリア", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 67, "prompt": "保存ボタンで、ThisItem の Status を \"対応中\"、AssignedAt を Now() に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"対応中\", AssignedAt:Now()})", "focus": "担当開始", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 68, "prompt": "保存ボタンで、ThisItem の Progress を Round(Value(txtProgress.Text),0) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Progress:Round(Value(txtProgress.Text),0)})", "focus": "丸め", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 69, "prompt": "保存ボタンで、ThisItem の Status を \"未\" にする際、Overdue を false にも更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"未\", Overdue:false})", "focus": "関連フラグ更新", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 70, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" にする際、Overdue を false にも更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", Overdue:false})", "focus": "完了で期限切れ解除", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 71, "prompt": "保存ボタンで、ThisItem の Tags を Concat(colTags, Value, \",\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Tags:Concat(colTags, Value, \",\")})", "focus": "コレクション→CSV", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 72, "prompt": "保存ボタンで、ThisItem の Tags を Concat(colTags, ThisRecord.Value, \",\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Tags:Concat(colTags, ThisRecord.Value, \",\")})", "focus": "ThisRecord参照", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 73, "prompt": "保存ボタンで、ThisItem の Status を If(CountRows(colSelected)>0,\"選択あり\",\"選択なし\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:If(CountRows(colSelected)>0,\"選択あり\",\"選択なし\")})", "focus": "CountRows", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 74, "prompt": "保存ボタンで、ThisItem の Summary を Text(Now(),\"yyyy/mm/dd\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Summary:Text(Now(),\"yyyy/mm/dd\")})", "focus": "Text書式", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 75, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" にし、Comment を txtComment.Text に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", Comment:txtComment.Text})", "focus": "複数列", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 76, "prompt": "保存ボタンで、ThisItem の Comment を \"\"（空文字）に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Comment:\"\"})", "focus": "空文字", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 77, "prompt": "保存ボタンで、ThisItem の Status を If(IsBlank(ThisItem.Status),\"未\",ThisItem.Status) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:If(IsBlank(ThisItem.Status),\"未\",ThisItem.Status)})", "focus": "既存空対策", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 78, "prompt": "保存ボタンで、ThisItem の Title を If(IsBlank(ThisItem.Title),\"(無題)\",ThisItem.Title) に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:If(IsBlank(ThisItem.Title),\"(無題)\",ThisItem.Title)})", "focus": "既存空対策", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 79, "prompt": "画面表示時に、Status が Blank() の全件を \"未\" に補正したい。", "expected": "ForAll(Filter(Tasks, IsBlank(Status)), Patch(Tasks, ThisRecord, {Status:\"未\"}))", "focus": "OnVisible補正", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-  { "id": 80, "prompt": "画面表示時に、Title が Blank() の全件を \"(無題)\" に補正したい。", "expected": "ForAll(Filter(Tasks, IsBlank(Title)), Patch(Tasks, ThisRecord, {Title:\"(無題)\"}))", "focus": "OnVisible補正", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-
-  { "id": 81, "prompt": "保存ボタンで、ThisItem の Status を \"未\" に更新し、UpdatedAt を Now() に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"未\", UpdatedAt:Now()})", "focus": "複数列", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 82, "prompt": "保存ボタンで、ID=varID の Title を \"案件-\" & varID に更新せよ。", "expected": "Patch(Tasks, LookUp(Tasks, ID=varID), {Title:\"案件-\" & varID})", "focus": "変数結合", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 83, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、vUpdated に保存→vLastIDも保存（2文）。", "expected": "Set(vUpdated, Patch(Tasks, ThisItem, {Status:\"完了\"})); Set(vLastID, vUpdated.ID)", "focus": "戻り値利用", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 84, "prompt": "保存ボタンで、ThisItem を更新してから Back() で戻れ（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Back()", "focus": "更新→遷移", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 85, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Navigate(scrHome)（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Navigate(scrHome)", "focus": "更新→画面遷移", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 86, "prompt": "保存ボタンで、ThisItem の Title を txtTitle.Text、Status を drpStatus.Selected.Value に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text, Status:drpStatus.Selected.Value})", "focus": "入力+選択", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 87, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Reset(txtStatus)（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Reset(txtStatus)", "focus": "更新→リセット", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 88, "prompt": "保存ボタンで、ThisItem の Title を txtTitle.Text に更新し、ResetForm(Form1)（2文）。", "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text}); ResetForm(Form1)", "focus": "更新→フォーム初期化", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 89, "prompt": "画面表示時に、初回だけ（IsBlank(vInit)）新規作成し、vInit=trueにせよ（2文）。", "expected": "If(IsBlank(vInit), Patch(Tasks, Defaults(Tasks), {Title:\"初期\"}), false); Set(vInit, true)", "focus": "OnVisibleの二重実行対策", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-  { "id": 90, "prompt": "画面表示時に、vInit が false のときだけ Status=\"未\" の先頭を対応中に更新せよ。", "expected": "If(Not(vInit), Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"対応中\"}), false)", "focus": "OnVisibleガード", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-
-  { "id": 91, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Launch(\"https://example.com\")（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Launch(\"https://example.com\")", "focus": "更新→外部起動", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 92, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Set(vDone,true)（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Set(vDone, true)", "focus": "更新→状態保持", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 93, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、UpdateContext({done:true})（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); UpdateContext({done:true})", "focus": "更新→画面内状態", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 94, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Select(btnRefresh)（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Select(btnRefresh)", "focus": "処理の共通化", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 95, "prompt": "保存ボタンで、ThisItem の Title を \"A\" に更新し、Status を \"未\" に更新せよ（順不同でOK）。", "expected": "Patch(Tasks, ThisItem, {Title:\"A\", Status:\"未\"})", "focus": "複数列", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 96, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Comment を Text(Now(),\"hh:mm\") に更新せよ。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", Comment:Text(Now(),\"hh:mm\")})", "focus": "Text()で時刻", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 97, "prompt": "保存ボタンで、ThisItem の Status を \"未\" に更新し、Notify(\"戻しました\")（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"未\"}); Notify(\"戻しました\")", "focus": "更新→通知", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-  { "id": 98, "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、Notify(\"完了\")（2文）。", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Notify(\"完了\")", "focus": "更新→通知", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnSelect" },
-
-  { "id": 99, "prompt": "画面表示時に、Status=\"保留\" の全件へ ReviewedAt=Now() を付けたい。", "expected": "ForAll(Filter(Tasks, Status=\"保留\"), Patch(Tasks, ThisRecord, {ReviewedAt:Now()}))", "focus": "OnVisible一括", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" },
-  { "id": 100, "prompt": "画面表示時に、Archived=true の全件へ ArchivedAt=Now() を付けたい。", "expected": "ForAll(Filter(Tasks, Archived=true), Patch(Tasks, ThisRecord, {ArchivedAt:Now()}))", "focus": "OnVisible一括", "place_required": true, "place_group_answer": "OnSelect / OnVisible", "place_answer": "OnVisible" }
+  {
+    "id": 1,
+    "prompt": "保存ボタンで、ThisItem の Status を「完了」に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})",
+    "focus": "Patch基本",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect"
+  },
+  {
+    "id": 2,
+    "prompt": "画面表示時に1回だけ、Title=\"下書き\" Status=\"未\" の行を作成せよ。",
+    "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"下書き\", Status:\"未\"})",
+    "focus": "OnVisible作成",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible"
+  }
 ]
