@@ -1,0 +1,10 @@
+[
+  {
+    "prompt": "ThisItemのStatusを完了に更新",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})"
+  },
+  {
+    "prompt": "ID=1を更新",
+    "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})"
+  }
+]
