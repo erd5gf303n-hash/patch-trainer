@@ -5,74 +5,103 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Patch特訓</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif; margin: 24px; }
-    h1 { margin: 0 0 12px; }
-    .meta { margin: 8px 0 16px; color: #444; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; margin: 24px; }
+    h1 { margin-bottom: 16px; }
     .box { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin: 12px 0; }
-    textarea { width: 100%; height: 120px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    textarea { width: 100%; height: 120px; }
     button { margin-right: 8px; padding: 8px 12px; }
     .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-    .ok { color: #0a7; font-weight: 700; }
-    .ng { color: #c33; font-weight: 700; }
-    .small { font-size: 12px; color: #666; }
-    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: #f4f4f4; padding: 2px 6px; border-radius: 6px; }
+    .small { font-size: 12px; color: #666; margin-top: 6px; }
+    .places { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; margin-top: 8px; }
+    .place-item { border: 1px solid #eee; border-radius: 8px; padding: 10px; background: #fafafa; }
+    .place-item label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+    .place-desc { font-size: 12px; color: #666; margin-left: 26px; margin-top: 4px; }
+    pre { white-space: pre-wrap; margin: 0; }
   </style>
 </head>
 <body>
 
 <h1>Patch特訓</h1>
 
-<div class="meta">
-  <span id="progress"></span>
-</div>
-
+<!-- 問題 -->
 <div class="box">
   <div id="question" style="white-space:pre-wrap;"></div>
 </div>
 
+<!-- 解答 -->
 <div class="box">
-  <div class="row" style="margin-bottom:8px;">
-    <strong>回答（Power Fx）</strong>
-    <span class="small">例: <span class="kbd">Patch(Tasks, ThisItem, {Status:"完了"})</span></span>
-  </div>
+  <strong>回答（Power Fx）</strong>
   <textarea id="answer" placeholder="ここにPatch式を書いてください"></textarea>
+
+  <div class="small">
+    Enterで判定 / Ctrl+Enterで次へ
+  </div>
 </div>
 
+<!-- 置き場（複数選択OK） -->
 <div class="box">
-  <div class="row">
-    <label><strong>書く場所（選択）</strong></label>
-    <label><input type="radio" name="place" value="Text / Items / Visible"> Text / Items / Visible</label>
-    <label><input type="radio" name="place" value="Set / UpdateContext"> Set / UpdateContext</label>
-    <label><input type="radio" name="place" value="OnSelect / OnVisible"> OnSelect / OnVisible</label>
+  <strong>書く場所（複数選択OK）</strong>
+
+  <div class="places">
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="OnSelect"> OnSelect</label>
+      <div class="place-desc">ボタンを押した時に実行（保存ボタンなど）</div>
+    </div>
+
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="OnVisible"> OnVisible</label>
+      <div class="place-desc">画面表示時に実行（初期化・初回ロード）</div>
+    </div>
+
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="Set"> Set</label>
+      <div class="place-desc">変数に値を入れる（例：Set(gblX, …)）</div>
+    </div>
+
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="UpdateContext"> UpdateContext</label>
+      <div class="place-desc">画面内変数に値を入れる（例：UpdateContext({x:…})）</div>
+    </div>
+
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="Text"> Text</label>
+      <div class="place-desc">ラベル等の表示用プロパティ</div>
+    </div>
+
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="Items"> Items</label>
+      <div class="place-desc">ギャラリー等のデータ元（Filter/Sortなど）</div>
+    </div>
+
+    <div class="place-item">
+      <label><input type="checkbox" name="place" value="Visible"> Visible</label>
+      <div class="place-desc">表示/非表示の条件式</div>
+    </div>
   </div>
-    <span class="small">Enterで判定 / Ctrl+Enterで次へ</span>
-  <div class="small" style="margin-top:8px;">
-    ※問題によって「必須」な場合があります（保存ボタンなら基本 <span class="kbd">OnSelect</span> など）
+
+  <div class="small">
+    ※問題によって「必須の場所」があります（例：保存ボタンなら基本 OnSelect）
   </div>
 </div>
 
+<!-- ボタン -->
 <div class="row" style="margin: 12px 0;">
-  <button id="btnCheck" type="button">判定</button>
-  <button id="btnReveal" type="button">答えを見る</button>
-  <button id="btnNext" type="button">次へ</button>
-  <button id="btnReset" type="button">シャッフルし直す</button>
+  <button onclick="check()">判定</button>
+  <button onclick="reveal()">答えを見る</button>
+  <button onclick="next()">次へ</button>
+  <button onclick="shuffle()">シャッフルし直す</button>
 </div>
 
+<!-- 結果 -->
 <h2 id="result"></h2>
 
 <div class="box">
-  <div class="row" style="margin-bottom:8px;">
-    <strong>正解</strong>
-    <span class="small">（判定後に表示）</span>
-  </div>
-  <pre id="correct" style="white-space:pre-wrap;margin:0;"></pre>
+  <strong>正解</strong>
+  <pre id="correct"></pre>
 </div>
 
 <div class="box">
-  <div class="row" style="margin-bottom:8px;">
-    <strong>解説</strong>
-    <span class="small">（あれば表示）</span>
-  </div>
+  <strong>解説</strong>
   <div id="explain" style="white-space:pre-wrap;"></div>
 </div>
 
