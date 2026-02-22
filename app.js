@@ -7,6 +7,8 @@
 let questions = [];
 let order = [];
 let pos = 0;
+let correctCount = 0;
+let answeredCount = 0;
 
 // ---------- helpers ----------
 function $(id) {
@@ -99,6 +101,17 @@ function showQuestion() {
   }
   clearAnswerUI();
   renderQuestion();
+  function updateStatus() {
+  const total = questions.length;
+  const current = pos + 1;
+
+  const accuracy = answeredCount === 0 
+    ? 0 
+    : Math.round((correctCount / answeredCount) * 100);
+
+  document.getElementById("status").textContent =
+    `問題数：${current}問目 / 全${total}問　｜　正解数：${correctCount}問 / ${answeredCount}問　｜　正解率：${accuracy}%`;
+}
 }
 
 function check() {
