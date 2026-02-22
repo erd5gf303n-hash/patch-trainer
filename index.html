@@ -40,47 +40,21 @@
 
 <!-- 置き場（複数選択OK） -->
 <div class="box">
-  <strong>書く場所（複数選択OK）</strong>
+  <strong>書く場所（選択）</strong>
 
-  <div class="places">
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="OnSelect"> OnSelect</label>
-      <div class="place-desc">ボタンを押した時に実行（保存ボタンなど）</div>
-    </div>
-
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="OnVisible"> OnVisible</label>
-      <div class="place-desc">画面表示時に実行（初期化・初回ロード）</div>
-    </div>
-
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="Set"> Set</label>
-      <div class="place-desc">変数に値を入れる（例：Set(gblX, …)）</div>
-    </div>
-
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="UpdateContext"> UpdateContext</label>
-      <div class="place-desc">画面内変数に値を入れる（例：UpdateContext({x:…})）</div>
-    </div>
-
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="Text"> Text</label>
-      <div class="place-desc">ラベル等の表示用プロパティ</div>
-    </div>
-
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="Items"> Items</label>
-      <div class="place-desc">ギャラリー等のデータ元（Filter/Sortなど）</div>
-    </div>
-
-    <div class="place-item">
-      <label><input type="checkbox" name="place" value="Visible"> Visible</label>
-      <div class="place-desc">表示/非表示の条件式</div>
-    </div>
-  </div>
+  <select id="place" style="width:100%;padding:8px;margin-top:8px;">
+    <option value="">選択してください</option>
+    <option value="OnSelect">OnSelect（ボタン押下時）</option>
+    <option value="OnVisible">OnVisible（画面表示時）</option>
+    <option value="Set">Set（グローバル変数）</option>
+    <option value="UpdateContext">UpdateContext（画面変数）</option>
+    <option value="Text">Text（表示用）</option>
+    <option value="Items">Items（データ表示）</option>
+    <option value="Visible">Visible（表示制御）</option>
+  </select>
 
   <div class="small">
-    ※問題によって「必須の場所」があります（例：保存ボタンなら基本 OnSelect）
+    ※問題によって最適な場所を選択
   </div>
 </div>
 
