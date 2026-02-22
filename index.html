@@ -1,226 +1,170 @@
 <!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Patch特訓</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Patch特訓</title>
 
-  <style>
-    :root { --border:#ddd; --bg:#fafafa; --text:#111; --muted:#666; }
+<style>
+body { margin:0; font-family:sans-serif; }
 
-    body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif; color:var(--text); }
-    .container { display:flex; min-height:100vh; }
+.container {
+  display: flex;
+  height: 100vh;
+}
 
-    /* 左サイド（固定） */
-    .sidebar {
-      width: 320px;
-      border-right: 1px solid var(--border);
-      background: var(--bg);
-      padding: 16px;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow: auto;
-      box-sizing: border-box;
-    }
-    .side-title { font-size: 14px; font-weight: 800; margin: 0 0 8px; }
-    .card { border:1px solid var(--border); border-radius:10px; background:#fff; padding:12px; margin: 0 0 12px; }
+/* 左サイド */
+.sidebar {
+  width: 260px;
+  border-right: 1px solid #ddd;
+  padding: 10px;
+}
 
-    #status { font-weight: 700; line-height: 1.8; }
+/* メイン */
+.main {
+  flex:1;
+  padding: 16px;
+}
 
-    .side-buttons { display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
-    .side-buttons button { padding:8px 10px; border:1px solid var(--border); background:#fff; border-radius:8px; cursor:pointer; }
-    .side-buttons button:hover { background:#f2f2f2; }
+/* 問題 */
+.question-box {
+  border:1px solid #ddd;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:10px;
+}
 
-    .muted { color: var(--muted); font-size: 11px; }
+/* 横2カラム */
+.content {
+  display:flex;
+  gap:16px;
+}
 
-    /* 苦手リスト */
-    #wrongList { margin-top: 8px; display:flex; flex-direction:column; gap:8px; }
-    .wrong-item {
-      border:1px solid var(--border);
-      background:#fff;
-      border-radius:10px;
-      padding:10px;
-      cursor:pointer;
-    }
-    .wrong-item:hover { background:#f6f6f6; }
-    .wrong-meta { font-size:12px; color:var(--muted); margin-bottom:6px; display:flex; gap:8px; flex-wrap:wrap; }
-    .badge { font-size:12px; padding:2px 8px; border:1px solid var(--border); border-radius:999px; background:#fff; }
-    .wrong-text { font-size: 13px; color:#222; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+/* 左（入力） */
+.left-panel {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
-    /* メイン */
-    .main { flex:1; padding: 22px; box-sizing:border-box; }
-    .main-inner { max-width: 900px; margin: 0 auto; }
+/* 右（結果） */
+.right-panel {
+  width:320px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
-    h1 { margin:0 0 12px; font-size: 22px; }
+/* 共通BOX */
+.box {
+  border:1px solid #ddd;
+  border-radius:8px;
+  padding:10px;
+}
 
-    /* 余白を少し圧縮（スクロール減） */
-    .box { border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin: 10px 0; background:#fff; }
+/* 解答欄（小さく） */
+textarea {
+  width:100%;
+  height:80px;
+  font-size:14px;
+}
 
-    #question { white-space: pre-wrap; }
+/* ボタン */
+.buttons {
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
 
-    /* ✅ 解答欄：小さく（高さ/文字） */
-    textarea {
-      width: 100%;
-      height: 90px;
-      font-size: 16px;
-      line-height: 1.45;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-    }
+button {
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
 
-    select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      box-sizing: border-box;
-      background: #fff;
-    }
+/* 色分け */
+.btn-check { background:#4CAF50; color:#fff; }
+.btn-check.wrong { background:#f44336; }
+.btn-next { background:#2196F3; color:#fff; }
 
-    /* 置き場 + 右側縦ボタン */
-    .place-area { display: flex; gap: 12px; align-items: flex-start; }
-    .place-left { flex: 1; }
-
-    .place-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      min-width: 120px; /* 少し細く */
-    }
-
-    /* ③ 一段上：色分け + 正誤で変化 */
-    .place-buttons button {
-      padding: 10px;
-      font-size: 15px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .btn-check { background: #4CAF50; color: #fff; } /* 通常：緑 */
-    .btn-next  { background: #2196F3; color: #fff; } /* 通常：青 */
-
-    .place-buttons button:hover { opacity: 0.88; }
-    .place-buttons button:active { transform: scale(0.98); }
-
-    .btn-check.correct { background: #4CAF50 !important; }
-    .btn-check.wrong   { background: #f44336 !important; } /* 不正解：赤 */
-
-    h2 { margin: 8px 0 0; }
-
-    pre { white-space: pre-wrap; margin:0; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-
-    details { margin-top: 8px; }
-    summary { cursor: pointer; user-select: none; }
-
-    @media (max-width: 860px) {
-      .container { flex-direction: column; }
-      .sidebar { width: 100%; height: auto; position: static; }
-      .main { padding: 16px; }
-      .main-inner { max-width: 100%; }
-      .place-area { flex-direction: column; }
-      .place-buttons { flex-direction: row; min-width: 0; }
-      .place-buttons button { flex: 1; }
-    }
-  </style>
+h2 { margin:0; }
+</style>
 </head>
 
 <body>
-  <div class="container">
 
-    <!-- 左サイド -->
-    <aside class="sidebar">
-      <div class="card">
-        <div class="side-title">進捗</div>
-        <div id="status">読み込み中…</div>
+<div class="container">
 
-        <div class="side-buttons">
-          <button type="button" onclick="resetStats()">統計リセット</button>
-          <button type="button" onclick="startWrongMode()">苦手だけ出題</button>
-          <button type="button" onclick="startAllMode()">全問題モード</button>
-        </div>
+  <!-- 左サイド -->
+  <div class="sidebar">
+    <div id="status"></div>
+  </div>
 
-        <div class="muted" style="margin-top:8px;">
-          ※「苦手だけ出題」は、左の“間違えた問題”に入っているものが対象
-        </div>
-      </div>
+  <!-- メイン -->
+  <div class="main">
 
-      <div class="card">
-        <div class="side-title">間違えた問題</div>
-        <div id="wrongList" class="muted">まだありません</div>
-      </div>
-    </aside>
+    <h1>Patch特訓</h1>
 
-    <!-- メイン -->
-    <main class="main">
-      <div class="main-inner">
-        <h1>Patch特訓</h1>
+    <div class="question-box" id="question"></div>
+
+    <div class="content">
+
+      <!-- 左：入力 -->
+      <div class="left-panel">
 
         <div class="box">
-          <div id="question"></div>
+          <b>回答（Power Fx）</b>
+          <textarea id="answer"></textarea>
         </div>
 
         <div class="box">
-          <strong>回答（Power Fx）</strong>
-          <textarea id="answer" placeholder="ここにPatch式を書いてください"></textarea>
-          <div class="muted">※ショートカット（Enter判定など）は無し</div>
+          <b>書く場所</b>
+          <select id="place">
+            <option value="">選択してください</option>
+            <option value="OnSelect">OnSelect</option>
+            <option value="OnVisible">OnVisible</option>
+            <option value="Set">Set</option>
+            <option value="UpdateContext">UpdateContext</option>
+            <option value="Text">Text</option>
+            <option value="Items">Items</option>
+            <option value="Visible">Visible</option>
+          </select>
         </div>
 
-        <!-- 書く場所 + 右側縦ボタン -->
-        <div class="box place-area">
-          <div class="place-left">
-            <strong>書く場所（選択）</strong>
-            <div class="muted" style="margin:8px 0 10px;">
-              Patchは基本「イベント側」に書くことが多い（OnSelect/OnVisible など）
-            </div>
-
-            <select id="place">
-              <option value="">選択してください</option>
-              <option value="OnSelect">OnSelect（ボタン押下時）</option>
-              <option value="OnVisible">OnVisible（画面表示時）</option>
-              <option value="Set">Set（グローバル変数）</option>
-              <option value="UpdateContext">UpdateContext（画面変数）</option>
-              <option value="Text">Text（表示用）</option>
-              <option value="Items">Items（データ元）</option>
-              <option value="Visible">Visible（表示制御）</option>
-            </select>
-          </div>
-
-          <div class="place-buttons">
-            <button type="button" class="btn-check" id="btnCheck" onclick="check()">判定</button>
-            <button type="button" class="btn-next" onclick="next()">次へ</button>
-          </div>
-        </div>
-
-        <h2 id="result"></h2>
-
-        <!-- ✅ 正解：折りたたみ -->
-        <div class="box">
-          <strong>正解</strong>
-          <details id="correctDetails">
-            <summary class="muted">表示する</summary>
-            <pre id="correct"></pre>
-          </details>
-        </div>
-
-        <!-- ✅ 解説：折りたたみ -->
-        <div class="box">
-          <strong>解説</strong>
-          <details id="explainDetails">
-            <summary class="muted">表示する</summary>
-            <div id="explain" style="white-space:pre-wrap;"></div>
-          </details>
+        <div class="buttons">
+          <button class="btn-check" id="btnCheck" onclick="check()">判定</button>
+          <button class="btn-next" onclick="next()">次へ</button>
         </div>
 
       </div>
-    </main>
+
+      <!-- 右：結果 -->
+      <div class="right-panel">
+
+        <div class="box">
+          <h2 id="result"></h2>
+        </div>
+
+        <div class="box">
+          <b>正解</b>
+          <pre id="correct"></pre>
+        </div>
+
+        <div class="box">
+          <b>解説</b>
+          <div id="explain"></div>
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 
-  <script src="app.js"></script>
+</div>
+
+<script src="app.js"></script>
 </body>
 </html>
