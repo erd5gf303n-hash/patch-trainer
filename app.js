@@ -1,11 +1,12 @@
 // app.js（フル）
 // 左サイド：進捗（問題数/正解数/正解率）＋ 間違えた問題リスト ＋ 苦手だけ出題モード
+// UI：判定ボタンを 正解=緑 / 不正解=赤 に変化（③）
 // ショートカット：無し
 //
 // 前提（index.html）
 // #question, #answer, #result, #correct, #explain, #place
-// （任意）#status, #wrongList
-// ボタンから check(), reveal(), next(), shuffle() を呼ぶ
+// #status, #wrongList（あれば表示）
+// #btnCheck（判定ボタン：色変化に使用）
 
 let questions = [];
 let order = [];
@@ -15,13 +16,11 @@ let pos = 0;
 let answeredCount = 0;
 let correctCount = 0;
 
-// 苦手管理（間違えた問題の集合）
-// wrongMap[id] = { idx, misses }
+// 苦手管理: wrongMap[id] = { idx, misses }
 const wrongMap = Object.create(null);
 
 // 出題モード
-// mode = "all" | "wrong"
-let mode = "all";
+let mode = "all"; // "all" | "wrong"
 
 function $(id) { return document.getElementById(id); }
 
@@ -65,6 +64,10 @@ function clearAnswerUI() {
   if ($("correct")) $("correct").textContent = "";
   if ($("explain")) $("explain").textContent = "";
   setPlaceValue("");
+
+  // ③：判定ボタン色を通常に戻す（wrong/correctを外す）
+  const btn = $("btnCheck");
+  if (btn) btn.classList.remove("wrong", "correct");
 }
 
 function currentQ() {
@@ -99,7 +102,6 @@ function updateStatus() {
 
   const wrongCount = Object.keys(wrongMap).length;
 
-  // 見やすいように改行表示
   el.innerHTML =
     `問題数：${current}問目/全${total}問<br>` +
     `正解数：${correctCount}問/${answeredCount}問<br>` +
@@ -122,7 +124,7 @@ function updateWrongList() {
   list.classList.remove("muted");
   list.innerHTML = "";
 
-  // misses多い順に並べる
+  // misses多い順
   ids.sort((a, b) => (wrongMap[b].misses - wrongMap[a].misses));
 
   for (const id of ids) {
@@ -154,7 +156,7 @@ function updateWrongList() {
 function renderQuestion() {
   const q = currentQ();
   if (!q) return;
-  $("question").textContent = q.prompt ?? "";
+  if ($("question")) $("question").textContent = q.prompt ?? "";
 }
 
 function showQuestion() {
@@ -167,6 +169,15 @@ function showQuestion() {
   renderQuestion();
   updateStatus();
   updateWrongList();
+}
+
+// ③：判定ボタンの色を正誤で変える
+function setCheckButtonState(state /* "correct" | "wrong" | "reset" */) {
+  const btn = $("btnCheck");
+  if (!btn) return;
+  btn.classList.remove("correct", "wrong");
+  if (state === "correct") btn.classList.add("correct");
+  if (state === "wrong") btn.classList.add("wrong");
 }
 
 // ------- 判定 -------
@@ -192,17 +203,21 @@ function check() {
   answeredCount += 1;
 
   const ok = codeOK && placeOK;
+
   if (ok) {
     correctCount += 1;
+    setCheckButtonState("correct"); // ③：正解 → 緑
 
     // 苦手リストから外す（克服したら消える設計）
     const id = String(q.id ?? "");
     if (id && wrongMap[id]) delete wrongMap[id];
 
-    $("result").textContent = "正解";
-    $("correct").textContent = "";
-    $("explain").textContent = q.explain ? q.explain : "OK。次へ。";
+    if ($("result")) $("result").textContent = "正解";
+    if ($("correct")) $("correct").textContent = "";
+    if ($("explain")) $("explain").textContent = q.explain ? q.explain : "OK。次へ。";
   } else {
+    setCheckButtonState("wrong"); // ③：不正解 → 赤
+
     // 苦手として登録（misses加算）
     const id = String(q.id ?? "");
     if (id) {
@@ -213,10 +228,10 @@ function check() {
       }
     }
 
-    $("result").textContent = "不正解";
+    if ($("result")) $("result").textContent = "不正解";
 
     const placeText = expectedPlaces.length ? expectedPlaces.join(" / ") : "(指定なし)";
-    $("correct").textContent = `【模範】\n${q.expected ?? ""}\n\n【置き場】\n${placeText}`;
+    if ($("correct")) $("correct").textContent = `【模範】\n${q.expected ?? ""}\n\n【置き場】\n${placeText}`;
 
     const reasons = [];
     if (!codeOK) reasons.push("コードが一致しません（第2引数：ThisItem/LookUp/Defaults、フィールド名、カンマ、引用符など）。");
@@ -229,23 +244,11 @@ function check() {
     if (q.explain) extra = `\n\n補足：${q.explain}`;
     else if (q.focus) extra = `\n\n狙い：${q.focus}`;
 
-    $("explain").textContent = reasons.join(" ") + extra;
+    if ($("explain")) $("explain").textContent = reasons.join(" ") + extra;
   }
 
   updateStatus();
   updateWrongList();
-}
-
-function reveal() {
-  const q = currentQ();
-  if (!q) return;
-
-  const expectedPlaces = expectedPlacesFromQuestion(q);
-  const placeText = expectedPlaces.length ? expectedPlaces.join(" / ") : "(指定なし)";
-
-  $("correct").textContent = `【模範】\n${q.expected ?? ""}\n\n【置き場】\n${placeText}`;
-  $("result").textContent = "";
-  $("explain").textContent = q.explain ? q.explain : (q.focus ? `狙い：${q.focus}` : "");
 }
 
 function next() {
@@ -253,8 +256,7 @@ function next() {
 
   pos += 1;
   if (pos >= order.length) {
-    // 1周したら自動でシャッフル
-    shuffle();
+    shuffle(); // 1周したら再構成
     return;
   }
   showQuestion();
@@ -264,9 +266,9 @@ function shuffle() {
   if (!questions.length) return;
 
   if (mode === "wrong") {
-    // 苦手だけ出題中：苦手が無いなら全問題へ戻す
     const wrongIdxs = Object.values(wrongMap).map(v => v.idx);
     if (wrongIdxs.length === 0) {
+      // 苦手が無いなら全問題に戻す
       mode = "all";
       order = shuffleArray([...Array(questions.length).keys()]);
       pos = 0;
@@ -294,7 +296,7 @@ function resetStats() {
 
 function startWrongMode() {
   mode = "wrong";
-  shuffle(); // モードに応じた order を作り直す
+  shuffle();
 }
 
 function startAllMode() {
@@ -303,8 +305,6 @@ function startAllMode() {
 }
 
 function jumpToQuestionByIdx(idx) {
-  // 現在のorderにその問題が含まれていればそこへ移動
-  // 含まれていない（例：苦手モード中で全問題クリック）場合は、その問題を先頭にして再構成
   const p = order.indexOf(idx);
   if (p >= 0) {
     pos = p;
@@ -312,14 +312,12 @@ function jumpToQuestionByIdx(idx) {
     return;
   }
 
-  // 現在モードに合わせてorderを作り直す
+  // orderに含まれない場合は再構成
   if (mode === "wrong") {
-    // 苦手モードなら、その問題を含めた苦手リストで再構築
     const wrongIdxs = Object.values(wrongMap).map(v => v.idx);
     if (!wrongIdxs.includes(idx)) wrongIdxs.unshift(idx);
     order = shuffleArray([...wrongIdxs]);
   } else {
-    // 全問題モードなら、idxを先頭にして残りをシャッフル
     const rest = [...Array(questions.length).keys()].filter(x => x !== idx);
     order = [idx, ...shuffleArray(rest)];
   }
@@ -364,9 +362,7 @@ init();
 
 // グローバル公開（onclick用）
 window.check = check;
-window.reveal = reveal;
 window.next = next;
-window.shuffle = shuffle;
 
 window.resetStats = resetStats;
 window.startWrongMode = startWrongMode;
