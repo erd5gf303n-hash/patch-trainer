@@ -2,94 +2,92 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Patch特訓</title>
 
 <style>
-body { margin:0; font-family:sans-serif; }
-
-.container {
-  display: flex;
-  height: 100vh;
+body {
+  font-family: sans-serif;
+  margin: 0;
 }
 
-/* 左サイド */
+/* 全体 */
+.container {
+  display: flex;
+}
+
+/* サイド */
 .sidebar {
-  width: 260px;
-  border-right: 1px solid #ddd;
+  width: 240px;
+  border-right: 1px solid #ccc;
   padding: 10px;
 }
 
 /* メイン */
 .main {
-  flex:1;
+  flex: 1;
   padding: 16px;
 }
 
 /* 問題 */
 .question-box {
-  border:1px solid #ddd;
-  padding:10px;
-  border-radius:8px;
-  margin-bottom:10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-/* 横2カラム */
+/* 2カラム */
 .content {
-  display:flex;
-  gap:16px;
+  display: flex;
+  gap: 20px;
 }
 
-/* 左（入力） */
-.left-panel {
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+/* 左 */
+.left {
+  flex: 1;
 }
 
-/* 右（結果） */
-.right-panel {
-  width:320px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+/* 右 */
+.right {
+  width: 320px;
 }
 
 /* 共通BOX */
 .box {
-  border:1px solid #ddd;
-  border-radius:8px;
-  padding:10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
-/* 解答欄（小さく） */
+/* テキストエリア */
 textarea {
-  width:100%;
-  height:80px;
-  font-size:14px;
+  width: 100%;
+  height: 80px;
+  font-size: 14px;
 }
 
 /* ボタン */
 .buttons {
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 button {
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-/* 色分け */
-.btn-check { background:#4CAF50; color:#fff; }
-.btn-check.wrong { background:#f44336; }
-.btn-next { background:#2196F3; color:#fff; }
+.btn-check {
+  background: #4CAF50;
+  color: white;
+}
 
-h2 { margin:0; }
+.btn-next {
+  background: #2196F3;
+  color: white;
+}
 </style>
 </head>
 
@@ -111,16 +109,16 @@ h2 { margin:0; }
 
     <div class="content">
 
-      <!-- 左：入力 -->
-      <div class="left-panel">
+      <!-- 左 -->
+      <div class="left">
 
         <div class="box">
-          <b>回答（Power Fx）</b>
+          <b>回答（Power Fx）</b><br>
           <textarea id="answer"></textarea>
         </div>
 
         <div class="box">
-          <b>書く場所</b>
+          <b>書く場所</b><br>
           <select id="place">
             <option value="">選択してください</option>
             <option value="OnSelect">OnSelect</option>
@@ -134,14 +132,14 @@ h2 { margin:0; }
         </div>
 
         <div class="buttons">
-          <button class="btn-check" id="btnCheck" onclick="check()">判定</button>
+          <button class="btn-check" onclick="check()">判定</button>
           <button class="btn-next" onclick="next()">次へ</button>
         </div>
 
       </div>
 
-      <!-- 右：結果 -->
-      <div class="right-panel">
+      <!-- 右 -->
+      <div class="right">
 
         <div class="box">
           <h2 id="result"></h2>
