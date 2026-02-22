@@ -1,12 +1,10 @@
 // app.js（フル）
-// 左サイド：進捗（問題数/正解数/正解率）＋ 間違えた問題リスト ＋ 苦手だけ出題モード
-// UI：判定ボタンを 正解=緑 / 不正解=赤 に変化（③）
-// ショートカット：無し
-//
-// 前提（index.html）
-// #question, #answer, #result, #correct, #explain, #place
-// #status, #wrongList（あれば表示）
-// #btnCheck（判定ボタン：色変化に使用）
+// 改修点：
+// - 正解/解説をdetailsで折りたたみ、判定後に自動でopen
+// - textarea小型化（CSS側）
+// - ショートカット無し
+// - 判定ボタン：正解=緑 / 不正解=赤（③）
+// - 左サイド：進捗（問題数/正解数/正解率）＋ 苦手リスト ＋ 苦手モード
 
 let questions = [];
 let order = [];
@@ -47,6 +45,11 @@ function shuffleArray(arr) {
   return arr;
 }
 
+function currentQ() {
+  if (!questions.length) return null;
+  return questions[order[pos]];
+}
+
 function getSelectedPlace() {
   const sel = $("place");
   return sel ? (sel.value || "") : "";
@@ -58,28 +61,20 @@ function setPlaceValue(v) {
   sel.value = v ?? "";
 }
 
-function clearAnswerUI() {
-  if ($("answer")) $("answer").value = "";
-  if ($("result")) $("result").textContent = "";
-  if ($("correct")) $("correct").textContent = "";
-  if ($("explain")) $("explain").textContent = "";
-  setPlaceValue("");
-
-  // ③：判定ボタン色を通常に戻す（wrong/correctを外す）
-  const btn = $("btnCheck");
-  if (btn) btn.classList.remove("wrong", "correct");
-}
-
-function currentQ() {
-  if (!questions.length) return null;
-  return questions[order[pos]];
+// ------- details自動展開（判定後） -------
+function openDetailsAfterCheck() {
+  const c = $("correctDetails");
+  const e = $("explainDetails");
+  if (c) c.open = true;
+  if (e) e.open = true;
 }
 
 // ------- 置き場（正解） -------
 function expectedPlacesFromQuestion(q) {
   if (Array.isArray(q.place_answers)) return q.place_answers;
   if (typeof q.place_answer === "string" && q.place_answer) return [q.place_answer];
-  if (typeof q.place_group_answer === "string" && q.place_group_answer) return [q.place_group_answer]; // 旧救済
+  // 旧データ救済
+  if (typeof q.place_group_answer === "string" && q.place_group_answer) return [q.place_group_answer];
   return [];
 }
 
@@ -152,7 +147,33 @@ function updateWrongList() {
   }
 }
 
-// ------- 画面表示 -------
+// ------- 表示クリア -------
+function setCheckButtonState(state /* "correct" | "wrong" | "reset" */) {
+  const btn = $("btnCheck");
+  if (!btn) return;
+  btn.classList.remove("correct", "wrong");
+  if (state === "correct") btn.classList.add("correct");
+  if (state === "wrong") btn.classList.add("wrong");
+}
+
+function clearAnswerUI() {
+  if ($("answer")) $("answer").value = "";
+  if ($("result")) $("result").textContent = "";
+  if ($("correct")) $("correct").textContent = "";
+  if ($("explain")) $("explain").textContent = "";
+  setPlaceValue("");
+
+  // 判定ボタン色を通常に戻す
+  setCheckButtonState("reset");
+
+  // detailsはたたむ（次問題で省スペース）
+  const c = $("correctDetails");
+  const e = $("explainDetails");
+  if (c) c.open = false;
+  if (e) e.open = false;
+}
+
+// ------- 問題表示 -------
 function renderQuestion() {
   const q = currentQ();
   if (!q) return;
@@ -169,15 +190,6 @@ function showQuestion() {
   renderQuestion();
   updateStatus();
   updateWrongList();
-}
-
-// ③：判定ボタンの色を正誤で変える
-function setCheckButtonState(state /* "correct" | "wrong" | "reset" */) {
-  const btn = $("btnCheck");
-  if (!btn) return;
-  btn.classList.remove("correct", "wrong");
-  if (state === "correct") btn.classList.add("correct");
-  if (state === "wrong") btn.classList.add("wrong");
 }
 
 // ------- 判定 -------
@@ -201,14 +213,13 @@ function check() {
   }
 
   answeredCount += 1;
-
   const ok = codeOK && placeOK;
 
   if (ok) {
     correctCount += 1;
-    setCheckButtonState("correct"); // ③：正解 → 緑
+    setCheckButtonState("correct"); // 正解 → 緑
 
-    // 苦手リストから外す（克服したら消える設計）
+    // 苦手から外す（克服したら消える）
     const id = String(q.id ?? "");
     if (id && wrongMap[id]) delete wrongMap[id];
 
@@ -216,16 +227,13 @@ function check() {
     if ($("correct")) $("correct").textContent = "";
     if ($("explain")) $("explain").textContent = q.explain ? q.explain : "OK。次へ。";
   } else {
-    setCheckButtonState("wrong"); // ③：不正解 → 赤
+    setCheckButtonState("wrong"); // 不正解 → 赤
 
     // 苦手として登録（misses加算）
     const id = String(q.id ?? "");
     if (id) {
-      if (!wrongMap[id]) {
-        wrongMap[id] = { idx: order[pos], misses: 1 };
-      } else {
-        wrongMap[id].misses += 1;
-      }
+      if (!wrongMap[id]) wrongMap[id] = { idx: order[pos], misses: 1 };
+      else wrongMap[id].misses += 1;
     }
 
     if ($("result")) $("result").textContent = "不正解";
@@ -246,6 +254,9 @@ function check() {
 
     if ($("explain")) $("explain").textContent = reasons.join(" ") + extra;
   }
+
+  // ✅ 判定したら正解/解説を自動で開く（スクロール無し狙い）
+  openDetailsAfterCheck();
 
   updateStatus();
   updateWrongList();
