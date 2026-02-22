@@ -1,10 +1,42 @@
 [
-  {
-    "prompt": "ThisItemのStatusを完了に更新",
-    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})"
-  },
-  {
-    "prompt": "ID=1を更新",
-    "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})"
-  }
+  { "id": 1, "level": 1, "prompt": "ThisItem の Status を「完了」に更新せよ", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})", "focus": "Patch基本形（第2引数=レコード）" },
+  { "id": 2, "level": 1, "prompt": "ThisItem の Title を「テスト」に更新せよ", "expected": "Patch(Tasks, ThisItem, {Title:\"テスト\"})", "focus": "単一列更新" },
+  { "id": 3, "level": 1, "prompt": "ThisItem の Status を txtStatus.Text で更新せよ", "expected": "Patch(Tasks, ThisItem, {Status: txtStatus.Text})", "focus": "コントロール値参照" },
+  { "id": 4, "level": 1, "prompt": "ThisItem の Title を txtTitle.Text で更新せよ", "expected": "Patch(Tasks, ThisItem, {Title: txtTitle.Text})", "focus": "Text入力参照" },
+
+  { "id": 5, "level": 2, "prompt": "ID=1 の Status を「完了」に更新せよ", "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})", "focus": "LookUp=レコード" },
+  { "id": 6, "level": 2, "prompt": "ID=varID の Title を txtTitle.Text に更新せよ", "expected": "Patch(Tasks, LookUp(Tasks, ID=varID), {Title: txtTitle.Text})", "focus": "変数で対象指定" },
+  { "id": 7, "level": 2, "prompt": "Title=\"A\" の Status を「対応中」に更新せよ", "expected": "Patch(Tasks, LookUp(Tasks, Title=\"A\"), {Status:\"対応中\"})", "focus": "キーがTitleの場合" },
+  { "id": 8, "level": 2, "prompt": "Status=\"未\" の先頭1件を「対応中」に更新せよ", "expected": "Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"対応中\"})", "focus": "Filter=テーブル→Firstでレコード化" },
+
+  { "id": 9, "level": 2, "prompt": "新規作成（Title=\"新規\", Status=\"未\"）", "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"新規\", Status:\"未\"})", "focus": "Defaults=新規レコード" },
+  { "id": 10, "level": 2, "prompt": "新規作成（Title=txtTitle.Text, Status=\"未\"）", "expected": "Patch(Tasks, Defaults(Tasks), {Title: txtTitle.Text, Status:\"未\"})", "focus": "入力を使って新規" },
+
+  { "id": 11, "level": 3, "prompt": "varRec（レコード変数）の Status を「完了」に更新せよ", "expected": "Patch(Tasks, varRec, {Status:\"完了\"})", "focus": "第2引数にレコード変数" },
+  { "id": 12, "level": 3, "prompt": "Patchの戻り値を vUpdated に保存せよ", "expected": "Set(vUpdated, Patch(Tasks, ThisItem, {Status:\"完了\"}))", "focus": "Patchは更新後レコードを返す" },
+
+  { "id": 13, "level": 3, "prompt": "varIDが空なら新規、空でなければ更新（Title=txtTitle.Text）", "expected": "If(IsBlank(varID), Patch(Tasks, Defaults(Tasks), {Title: txtTitle.Text}), Patch(Tasks, LookUp(Tasks, ID=varID), {Title: txtTitle.Text}))", "focus": "新規/更新の分岐" },
+  { "id": 14, "level": 3, "prompt": "IsEdit=trueなら更新、falseなら新規（Status=\"未\"）", "expected": "If(IsEdit, Patch(Tasks, ThisItem, {Status:\"未\"}), Patch(Tasks, Defaults(Tasks), {Status:\"未\"}))", "focus": "ブールで分岐" },
+
+  { "id": 15, "level": 3, "prompt": "Status が空なら \"未\" を入れて更新（ThisItem）", "expected": "Patch(Tasks, ThisItem, {Status: Coalesce(ThisItem.Status, \"未\")})", "focus": "Coalesceで空対応" },
+  { "id": 16, "level": 3, "prompt": "txtStatus.Text が空なら \"未\" を入れて更新（ThisItem）", "expected": "Patch(Tasks, ThisItem, {Status: Coalesce(txtStatus.Text, \"未\")})", "focus": "入力空のデフォルト" },
+
+  { "id": 17, "level": 4, "prompt": "colSelected（ID持ち）を全部「完了」に更新せよ", "expected": "ForAll(colSelected, Patch(Tasks, LookUp(Tasks, ID=ThisRecord.ID), {Status:\"完了\"}))", "focus": "複数更新（ForAll + Patch）" },
+  { "id": 18, "level": 4, "prompt": "colSelected の各レコードで Title を ThisRecord.Title に更新せよ", "expected": "ForAll(colSelected, Patch(Tasks, LookUp(Tasks, ID=ThisRecord.ID), {Title: ThisRecord.Title}))", "focus": "ThisRecord参照" },
+  { "id": 19, "level": 4, "prompt": "colSelected の各レコードで Status を ThisRecord.Status に更新せよ", "expected": "ForAll(colSelected, Patch(Tasks, LookUp(Tasks, ID=ThisRecord.ID), {Status: ThisRecord.Status}))", "focus": "コレクション→データソース反映" },
+
+  { "id": 20, "level": 4, "prompt": "Status=\"未\" の先頭1件を完了にして vDone に保存せよ", "expected": "Set(vDone, Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"完了\"}))", "focus": "Set + Patch" },
+  { "id": 21, "level": 4, "prompt": "Patch後に Notify(\"更新しました\") を出せ", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Notify(\"更新しました\")", "focus": "処理の連結（;）" },
+  { "id": 22, "level": 4, "prompt": "ThisItem更新→更新後IDを vLastID に保存せよ", "expected": "Set(vRec, Patch(Tasks, ThisItem, {Status:\"完了\"})); Set(vLastID, vRec.ID)", "focus": "戻り値からID参照" },
+
+  { "id": 23, "level": 5, "prompt": "誤り修正：Patch(Tasks, Filter(Tasks, ID=1), {Status:\"完了\"}) を直せ", "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})", "focus": "FilterはテーブルでNG" },
+  { "id": 24, "level": 5, "prompt": "誤り修正：Filter(Tasks, Status=\"未\") を第2引数に渡すのを直せ（先頭1件）", "expected": "Patch(Tasks, First(Filter(Tasks, Status=\"未\")), {Status:\"完了\"})", "focus": "Firstでレコード化" },
+  { "id": 25, "level": 5, "prompt": "誤り修正：Patch(Tasks, ThisItem.ID, {Status:\"完了\"}) を直せ", "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})", "focus": "IDはレコードではない" },
+
+  { "id": 26, "level": 5, "prompt": "新規作成→ vNew に保存（Title=\"X\"）", "expected": "Set(vNew, Patch(Tasks, Defaults(Tasks), {Title:\"X\"}))", "focus": "新規+戻り値保持" },
+  { "id": 27, "level": 5, "prompt": "ID=varID を完了に更新し vUpdated に保存せよ", "expected": "Set(vUpdated, Patch(Tasks, LookUp(Tasks, ID=varID), {Status:\"完了\"}))", "focus": "対象特定+保存" },
+
+  { "id": 28, "level": 5, "prompt": "Status=\"未\" の全件を完了にする（ForAllで）", "expected": "ForAll(Filter(Tasks, Status=\"未\"), Patch(Tasks, ThisRecord, {Status:\"完了\"}))", "focus": "Filter結果の全件更新" },
+  { "id": 29, "level": 5, "prompt": "Title が \"A\" または \"B\" の先頭1件を「対応中」に更新せよ", "expected": "Patch(Tasks, First(Filter(Tasks, Title=\"A\" || Title=\"B\")), {Status:\"対応中\"})", "focus": "OR条件" },
+  { "id": 30, "level": 5, "prompt": "ID=1 の Title を \"A\" に更新し、同時に Status を \"未\" にせよ", "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Title:\"A\", Status:\"未\"})", "focus": "複数列更新" }
 ]
