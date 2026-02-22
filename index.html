@@ -2,23 +2,79 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Patch特訓</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Yu Gothic", sans-serif; margin: 24px; }
+    h1 { margin: 0 0 12px; }
+    .meta { margin: 8px 0 16px; color: #444; }
+    .box { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin: 12px 0; }
+    textarea { width: 100%; height: 120px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+    button { margin-right: 8px; padding: 8px 12px; }
+    .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .ok { color: #0a7; font-weight: 700; }
+    .ng { color: #c33; font-weight: 700; }
+    .small { font-size: 12px; color: #666; }
+    .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background: #f4f4f4; padding: 2px 6px; border-radius: 6px; }
+  </style>
 </head>
 <body>
 
 <h1>Patch特訓</h1>
 
-<div id="question"></div>
+<div class="meta">
+  <span id="progress">読み込み中…</span>
+  <span class="small">（Enterで判定 / Ctrl+Enterで次へ）</span>
+</div>
 
-<textarea id="answer" style="width:100%;height:100px;"></textarea>
+<div class="box">
+  <div id="question" style="white-space:pre-wrap;"></div>
+</div>
 
-<br><br>
+<div class="box">
+  <div class="row" style="margin-bottom:8px;">
+    <strong>回答（Power Fx）</strong>
+    <span class="small">例: <span class="kbd">Patch(Tasks, ThisItem, {Status:"完了"})</span></span>
+  </div>
+  <textarea id="answer" placeholder="ここにPatch式を書いてください"></textarea>
+</div>
 
-<button onclick="check()">判定</button>
-<button onclick="next()">次へ</button>
+<div class="box">
+  <div class="row">
+    <label><strong>書く場所（選択）</strong></label>
+    <label><input type="radio" name="place" value="Text / Items / Visible"> Text / Items / Visible</label>
+    <label><input type="radio" name="place" value="Set / UpdateContext"> Set / UpdateContext</label>
+    <label><input type="radio" name="place" value="OnSelect / OnVisible"> OnSelect / OnVisible</label>
+  </div>
+  <div class="small" style="margin-top:8px;">
+    ※問題によって「必須」な場合があります（保存ボタンなら基本 <span class="kbd">OnSelect</span> など）
+  </div>
+</div>
+
+<div class="row" style="margin: 12px 0;">
+  <button id="btnCheck" type="button">判定</button>
+  <button id="btnReveal" type="button">答えを見る</button>
+  <button id="btnNext" type="button">次へ</button>
+  <button id="btnReset" type="button">シャッフルし直す</button>
+</div>
 
 <h2 id="result"></h2>
-<pre id="correct"></pre>
+
+<div class="box">
+  <div class="row" style="margin-bottom:8px;">
+    <strong>正解</strong>
+    <span class="small">（判定後に表示）</span>
+  </div>
+  <pre id="correct" style="white-space:pre-wrap;margin:0;"></pre>
+</div>
+
+<div class="box">
+  <div class="row" style="margin-bottom:8px;">
+    <strong>解説</strong>
+    <span class="small">（あれば表示）</span>
+  </div>
+  <div id="explain" style="white-space:pre-wrap;"></div>
+</div>
 
 <script src="app.js"></script>
 
