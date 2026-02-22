@@ -1,230 +1,260 @@
-// app.js
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Patch特訓</title>
 
-let questions = [];
-let order = [];
-let idx = 0;
-
-let attempted = 0;
-let correctCount = 0;
-
-// wrongMap: { [id]: { q, count } }
-let wrongMap = {};
-
-// ========= util =========
-function normalizeFx(s){
-  return (s || "")
-    .replace(/\u3000/g, " ")           // 全角スペース→半角
-    .replace(/\s+/g, "")              // 空白/改行を全部除去
-    .replace(/[“”]/g, '"')            // 変形ダブルクォート
-    .replace(/[’‘]/g, "'");           // 変形シングルクォート
+<style>
+:root{
+  --border:#ddd;
+  --bg:#fafafa;
+  --card:#fff;
+  --text:#111;
+  --muted:#666;
+  --ok:#2e7d32;
+  --ng:#c62828;
+  --blue:#1976d2;
 }
 
-function escapeHtml(str){
-  return (str || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;");
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
+  color:var(--text);
 }
 
-// ========= render =========
-function renderStatus(){
-  const total = order.length || 0;
-  const currentNo = Math.min(idx + 1, total);
-
-  const rate = attempted === 0 ? 0 : Math.round((correctCount / attempted) * 100);
-
-  const wrongCount = Object.values(wrongMap).reduce((sum, v) => sum + v.count, 0);
-
-  const mode = (Object.keys(wrongMap).length > 0 && window.__mode === "weak")
-    ? "苦手だけ出題"
-    : "全問題";
-
-  document.getElementById("status").innerHTML =
-    `問題数：${currentNo}問目/全${total}問<br>` +
-    `正解数：${correctCount}問/${attempted}問<br>` +
-    `正解率：${rate}%<br>` +
-    `苦手：${wrongCount}問<br>` +
-    `モード：${mode}`;
+.container{
+  display:flex;
+  min-height:100vh;
 }
 
-function renderWrongList(){
-  const wrap = document.getElementById("wrongList");
-  const arr = Object.values(wrongMap)
-    .sort((a,b)=> b.count - a.count)
-    .slice(0, 12); // 多すぎたら上位だけ
+/* ===== 左サイド ===== */
+.sidebar{
+  width:320px;
+  border-right:1px solid var(--border);
+  background:var(--bg);
+  padding:16px;
+}
 
-  if(arr.length === 0){
-    wrap.innerHTML = `<div class="muted">まだありません</div>`;
-    return;
-  }
+.card{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  background:#fff;
+  margin-bottom:14px;
+}
 
-  wrap.innerHTML = arr.map(v=>{
-    const q = v.q;
-    return `
-      <div class="wrong-item">
-        <div class="wrong-top">
-          <span class="badge">id:${q.id}</span>
-          <span class="badge badge-red">×${v.count}</span>
-        </div>
-        <div class="wrong-prompt">${escapeHtml(q.prompt)}</div>
+.section-title{
+  font-size:13px;
+  font-weight:800;
+  color:#444;
+  margin-bottom:8px;
+}
+
+#status{
+  line-height:1.75;
+  font-weight:700;
+}
+
+.small-note{
+  margin-top:8px;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.wrong-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.wrong-item{
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px;
+}
+
+.badge{
+  font-size:12px;
+  border:1px solid var(--border);
+  padding:2px 8px;
+  border-radius:999px;
+}
+
+.badge-red{
+  background:#ffecec;
+  border-color:#f0b4b4;
+}
+
+/* ===== メイン ===== */
+.main{
+  flex:1;
+  padding:24px;
+}
+
+.main-inner{
+  max-width:900px;
+  margin:0 auto;
+}
+
+h1{
+  margin-bottom:16px;
+}
+
+.box{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  background:#fff;
+  margin-bottom:14px;
+}
+
+textarea{
+  width:100%;
+  height:90px;
+  font-size:16px;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-family:monospace;
+}
+
+/* 置く場所 + ボタン */
+.place-area{
+  display:flex;
+  gap:12px;
+}
+
+select{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+}
+
+.place-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  width:120px;
+}
+
+.place-buttons button{
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+
+#btnCheck{ background:#e53935; }
+#btnNext{ background:#1976d2; }
+
+/* 判定エリア */
+.result-title{
+  font-size:22px;
+  font-weight:900;
+}
+
+.result-box{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px;
+  margin-top:10px;
+}
+
+.ok{ background:#f1fbf2; }
+.ng{ background:#fff1f1; }
+
+pre{
+  white-space:pre-wrap;
+  font-family:monospace;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <!-- 左サイド -->
+  <aside class="sidebar">
+    <div class="card">
+      <div class="section-title">進捗</div>
+      <div id="status">読み込み中…</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">間違えた問題</div>
+      <div id="wrongList" class="wrong-list"></div>
+    </div>
+  </aside>
+
+  <!-- メイン -->
+  <main class="main">
+    <div class="main-inner">
+
+      <h1>Patch特訓</h1>
+
+      <!-- 問題 -->
+      <div class="box">
+        <div class="section-title">問題</div>
+        <div id="question"></div>
       </div>
-    `;
-  }).join("");
-}
 
-function showQuestion(){
-  const q = questions[ order[idx] ];
-  if(!q) return;
+      <!-- 回答 -->
+      <div class="box">
+        <div class="section-title">回答（Power Fx）</div>
+        <textarea id="answer"></textarea>
+      </div>
 
-  // 問題文
-  document.getElementById("question").textContent = q.prompt;
+      <!-- 置く場所 -->
+      <div class="box">
+        <div class="section-title">置く場所</div>
 
-  // 入力初期化
-  document.getElementById("answer").value = "";
-  document.getElementById("place").value = "";
+        <div class="place-area">
+          <div style="flex:1;">
+            <select id="place">
+              <option value="">選択してください</option>
+              <option value="Text">Text</option>
+              <option value="Items">Items</option>
+              <option value="Visible">Visible</option>
+              <option value="Set">Set</option>
+              <option value="UpdateContext">UpdateContext</option>
+              <option value="OnSelect">OnSelect</option>
+              <option value="OnVisible">OnVisible</option>
+            </select>
+          </div>
 
-  // 結果を隠す
-  document.getElementById("resultWrap").style.display = "none";
-  document.getElementById("resultTitle").textContent = "";
-  document.getElementById("correct").textContent = "";
-  document.getElementById("explain").textContent = "";
-  document.getElementById("placeCorrectLine").textContent = "";
+          <div class="place-buttons">
+            <button id="btnCheck" onclick="check()">判定</button>
+            <button id="btnNext" onclick="next()">次へ</button>
+          </div>
+        </div>
+      </div>
 
-  // 次へは「判定後」に押せるほうが安全なので無効化
-  document.getElementById("btnNext").disabled = true;
+      <!-- 判定 -->
+      <div id="resultWrap" style="display:none;">
+        <div class="result-title" id="resultTitle"></div>
 
-  renderStatus();
-}
+        <div class="result-box" id="resultBox">
+          <div class="section-title">正解</div>
+          <pre id="correct"></pre>
+          <div id="placeCorrectLine"></div>
+        </div>
 
-function markWrong(q){
-  if(!wrongMap[q.id]){
-    wrongMap[q.id] = { q, count: 0 };
-  }
-  wrongMap[q.id].count += 1;
-  renderWrongList();
-}
+        <div class="result-box">
+          <div class="section-title">解説</div>
+          <div id="explain"></div>
+        </div>
+      </div>
 
-// ========= judge =========
-function check(){
-  const q = questions[ order[idx] ];
-  if(!q) return;
+    </div>
+  </main>
 
-  attempted += 1;
+</div>
 
-  const userFx = normalizeFx(document.getElementById("answer").value);
-  const expectedFx = normalizeFx(q.expected);
-
-  const codeOk = userFx === expectedFx;
-
-  // 置く場所判定
-  let placeOk = true;
-  let placeMsg = "";
-
-  const selected = document.getElementById("place").value;
-
-  // place_required が true のときだけ厳密判定
-  if(q.place_required){
-    placeOk = (selected === (q.place_answer || ""));
-    if(!selected){
-      placeOk = false;
-      placeMsg = "（置く場所：未選択）";
-    }
-  }
-
-  const ok = codeOk && placeOk;
-
-  if(ok){
-    correctCount += 1;
-  }else{
-    markWrong(q);
-  }
-
-  // 結果表示（置く場所の下）
-  const wrap = document.getElementById("resultWrap");
-  const title = document.getElementById("resultTitle");
-  const correct = document.getElementById("correct");
-  const explain = document.getElementById("explain");
-  const box = document.getElementById("resultBox");
-  const placeLine = document.getElementById("placeCorrectLine");
-
-  wrap.style.display = "block";
-
-  title.textContent = ok ? "正解" : "不正解";
-
-  // 色
-  box.classList.remove("ok","ng");
-  box.classList.add(ok ? "ok" : "ng");
-
-  // 正解表示
-  let out = "【模範】\n" + q.expected;
-  if(q.place_required){
-    out += "\n\n【置き場】\n" + (q.place_answer || "(未設定)");
-  }
-  correct.textContent = out;
-
-  if(q.place_required){
-    placeLine.textContent = `あなたの選択：${selected || "(未選択)"} / 正解：${q.place_answer || "(未設定)"} ${placeMsg}`;
-  }else{
-    placeLine.textContent = "置く場所はこの問題では自由（目安）";
-  }
-
-  // 解説
-  explain.textContent = q.explain || q.focus || "";
-
-  // 次へ有効化
-  document.getElementById("btnNext").disabled = false;
-
-  renderStatus();
-}
-
-function next(){
-  if(idx < order.length - 1){
-    idx += 1;
-    showQuestion();
-  }else{
-    // 最終問題後：最終結果表示
-    document.getElementById("question").textContent = "終了！おつかれさまでした。";
-    document.getElementById("btnNext").disabled = true;
-  }
-}
-
-// ========= init =========
-async function init(){
-  try{
-    const res = await fetch("questions.json", { cache: "no-store" });
-    if(!res.ok) throw new Error("questions.json が読み込めませんでした");
-    questions = await res.json();
-
-    // order作成（全問題）
-    order = questions.map((_, i)=> i);
-
-    // 初期はシャッフル
-    shuffle(order);
-
-    idx = 0;
-    attempted = 0;
-    correctCount = 0;
-    wrongMap = {};
-    window.__mode = "all";
-
-    renderWrongList();
-    renderStatus();
-    showQuestion();
-  }catch(e){
-    document.getElementById("question").textContent = "読み込みエラー：" + e.message;
-    console.error(e);
-  }
-}
-
-function shuffle(arr){
-  for(let i=arr.length-1; i>0; i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-window.check = check;
-window.next = next;
-
-init();
+<script src="app.js"></script>
+</body>
+</html>
