@@ -1,81 +1,1019 @@
-,
-{
-"id":201,
-"prompt":"保存ボタンで、ThisItem の Title を「A」に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {Title:\"A\"})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"Patchは表→行→変更の順。ThisItemは現在の行。"
-},
-{
-"id":202,
-"prompt":"保存ボタンで、ThisItem の Memo を txtMemo.Text に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {Memo:txtMemo.Text})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"入力値は .Text で取得する。"
-},
-{
-"id":203,
-"prompt":"保存ボタンで、ThisItem の Priority を数値として更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {Priority:Value(txtP.Text)})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"数値列にはValue()で変換が必要。"
-},
-{
-"id":204,
-"prompt":"保存ボタンで、新規に Title=\"新規\" の行を作成せよ。",
-"expected":"Patch(Tasks, Defaults(Tasks), {Title:\"新規\"})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"Defaultsを第2引数に入れると作成になる。"
-},
-{
-"id":205,
-"prompt":"保存ボタンで、ThisItem の Done を true に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {Done:true})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"Yes/No列はtrue/falseで更新。"
-},
-{
-"id":206,
-"prompt":"保存ボタンで、ThisItem の Done を反転せよ。",
-"expected":"Patch(Tasks, ThisItem, {Done:!ThisItem.Done})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"!は否定。"
-},
-{
-"id":207,
-"prompt":"保存ボタンで、ThisItem の DueDate を Today() に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {DueDate:Today()})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"Today()は今日の日付。"
-},
-{
-"id":208,
-"prompt":"保存ボタンで、ThisItem の DueDate を Today()+1 に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {DueDate:Today()+1})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"+1で翌日。"
-},
-{
-"id":209,
-"prompt":"保存ボタンで、ThisItem の Title を Trim(txtTitle.Text) に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {Title:Trim(txtTitle.Text)})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"Trimは空白削除。"
-},
-{
-"id":210,
-"prompt":"保存ボタンで、ThisItem の Status を ddStatus.Selected.Value に更新せよ。",
-"expected":"Patch(Tasks, ThisItem, {Status:ddStatus.Selected.Value})",
-"place_required":true,
-"place_answer":"OnSelect",
-"explain":"ドロップダウンはSelected.Value。"
-}
+[
+  {
+    "id": 1,
+    "prompt": "保存ボタンで、ThisItem の Title を「テスト」に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:\"テスト\"})",
+    "focus": "Patch基本：単一列更新",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Patch(①データソース, ②対象レコード, ③変更内容)。保存ボタン＝OnSelect。Tasksはリスト、ThisItemは今の行、{Title:\"テスト\"}でTitle列だけ変更。"
+  },
+  {
+    "id": 2,
+    "prompt": "保存ボタンで、ThisItem の Status を「完了」に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})",
+    "focus": "Patch基本：文字列更新",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Status列を文字列で更新。Patchの第3引数は {列名: 値} のレコード形式。"
+  },
+  {
+    "id": 3,
+    "prompt": "保存ボタンで、ThisItem の Memo を txtMemo.Text で更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Memo:txtMemo.Text})",
+    "focus": "入力値をPatchに渡す",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "テキスト入力は txtMemo.Text で取得。保存処理なのでOnSelectに書く。"
+  },
+  {
+    "id": 4,
+    "prompt": "保存ボタンで、ThisItem の Priority（数値列）を txtPri.Text から更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Priority:Value(txtPri.Text)})",
+    "focus": "型変換：文字→数値",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "入力は文字列なので数値列へ入れるなら Value() が必要。"
+  },
+  {
+    "id": 5,
+    "prompt": "保存ボタンで、ThisItem の Done（Yes/No列）を true に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Done:true})",
+    "focus": "型：真偽値",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Yes/No列は true / false。"
+  },
+  {
+    "id": 6,
+    "prompt": "保存ボタンで、ThisItem の Done を反転（true↔false）せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Done:!ThisItem.Done})",
+    "focus": "真偽値の反転",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "! は否定。ThisItem.Done を反転して保存する。"
+  },
+  {
+    "id": 7,
+    "prompt": "保存ボタンで、ThisItem の DueDate（日付列）を Today() に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {DueDate:Today()})",
+    "focus": "日付：Today()",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Today() は今日の日付。日付列へそのまま入れられる。"
+  },
+  {
+    "id": 8,
+    "prompt": "保存ボタンで、ThisItem の DueDate を Today()+1（明日）に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {DueDate:Today()+1})",
+    "focus": "日付：加算",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "日付は 1 を足すと翌日。"
+  },
+  {
+    "id": 9,
+    "prompt": "保存ボタンで、ThisItem の Title を Trim(txtTitle.Text) に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:Trim(txtTitle.Text)})",
+    "focus": "前処理：Trim",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Trim() は前後の空白を除去。保存前の整形としてよく使う。"
+  },
+  {
+    "id": 10,
+    "prompt": "保存ボタンで、ThisItem の Status を ddStatus.Selected.Value に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:ddStatus.Selected.Value})",
+    "focus": "ドロップダウン値",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Dropdown の選択値は Selected.Value（構成により SelectedText.Value の場合もある）。"
+  },
+
+  {
+    "id": 11,
+    "prompt": "画面表示時に1回だけ、新規に Title=\"下書き\" Status=\"未\" の行を作成せよ。",
+    "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"下書き\", Status:\"未\"})",
+    "focus": "新規作成：Defaults",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "新規作成は第2引数に Defaults(Tasks)。画面表示時＝OnVisible に置く。"
+  },
+  {
+    "id": 12,
+    "prompt": "保存ボタンで、新規に Title=txtTitle.Text の行を作成せよ。",
+    "expected": "Patch(Tasks, Defaults(Tasks), {Title:txtTitle.Text})",
+    "focus": "新規作成：入力値",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "保存ボタンで作成するのでOnSelect。"
+  },
+  {
+    "id": 13,
+    "prompt": "保存ボタンで、ThisItem の Title と Status を同時に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text, Status:ddStatus.Selected.Value})",
+    "focus": "複数列更新",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "第3引数のレコードに複数列を並べれば同時更新できる。"
+  },
+  {
+    "id": 14,
+    "prompt": "保存ボタンで、ThisItem の Memo に \"ID:\" & Text(ThisItem.ID) を保存せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Memo:\"ID:\" & Text(ThisItem.ID)})",
+    "focus": "文字列結合とText()",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "数値IDを文字列にするため Text() を使う。& で連結。"
+  },
+  {
+    "id": 15,
+    "prompt": "保存ボタンで、ThisItem の Score（数値）を Round(Value(txtScore.Text), 0) で更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Score:Round(Value(txtScore.Text), 0)})",
+    "focus": "数値：Round",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "入力→Value→Round。型変換＋丸めの流れ。"
+  },
+  {
+    "id": 16,
+    "prompt": "保存ボタンで、ThisItem の UpdatedAt（日付/時刻列）を Now() で更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {UpdatedAt:Now()})",
+    "focus": "日時：Now()",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Now() は現在の日時。監査用に更新日時を保存する定番。"
+  },
+  {
+    "id": 17,
+    "prompt": "保存ボタンで、ThisItem の Title を Upper(txtTitle.Text) に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:Upper(txtTitle.Text)})",
+    "focus": "文字：Upper",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Upper() は大文字化。前処理の練習。"
+  },
+  {
+    "id": 18,
+    "prompt": "保存ボタンで、ThisItem の Title を Lower(txtTitle.Text) に更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:Lower(txtTitle.Text)})",
+    "focus": "文字：Lower",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Lower() は小文字化。"
+  },
+  {
+    "id": 19,
+    "prompt": "保存ボタンで、ThisItem の Memo に Left(txtMemo.Text, 10) を保存せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Memo:Left(txtMemo.Text, 10)})",
+    "focus": "文字：Left",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Left(文字, 文字数) で左から切り出し。"
+  },
+  {
+    "id": 20,
+    "prompt": "保存ボタンで、ThisItem の Memo に Substitute(txtMemo.Text, \" \", \"\") を保存せよ（半角スペース除去）。",
+    "expected": "Patch(Tasks, ThisItem, {Memo:Substitute(txtMemo.Text, \" \", \"\")})",
+    "focus": "文字：Substitute",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Substitute(対象, 置換前, 置換後)。"
+  },
+
+  {
+    "id": 21,
+    "prompt": "保存ボタンで、ID=1 の行の Status を「完了」に更新せよ。",
+    "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})",
+    "focus": "対象特定：LookUp(ID)",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "ThisItem以外を更新したいときは LookUp で対象行を取ってPatchする。"
+  },
+  {
+    "id": 22,
+    "prompt": "保存ボタンで、ID=varId の行の Memo を更新せよ。",
+    "expected": "Patch(Tasks, LookUp(Tasks, ID=varId), {Memo:txtMemo.Text})",
+    "focus": "対象特定：変数ID",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "画面間でIDを渡す設計でよく使う。"
+  },
+  {
+    "id": 23,
+    "prompt": "保存ボタンで、Title=\"A\" の最初の行の Status を更新せよ。",
+    "expected": "Patch(Tasks, LookUp(Tasks, Title=\"A\"), {Status:\"進行中\"})",
+    "focus": "対象特定：LookUp(条件)",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "LookUpは条件に一致した最初の1件を返す。"
+  },
+  {
+    "id": 24,
+    "prompt": "保存ボタンで、galTasks.Selected の Title を更新せよ。",
+    "expected": "Patch(Tasks, galTasks.Selected, {Title:txtTitle.Text})",
+    "focus": "対象特定：Gallery.Selected",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "ギャラリーで選択中の行を更新したいときの基本形。"
+  },
+  {
+    "id": 25,
+    "prompt": "保存ボタンで、ThisItem ではなく Gallery の ThisItem（ギャラリー内）を更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})",
+    "focus": "ギャラリー内ThisItem",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "ギャラリー内のコントロールでは ThisItem はその行を指す。保存ボタンがギャラリー内ならThisItemでOK。"
+  },
+
+  {
+    "id": 26,
+    "prompt": "保存ボタンで、Status=\"未\" の最新（受信日時が最大）の行の Status を「対応中」に更新せよ。",
+    "expected": "Patch(Tasks, First(SortByColumns(Filter(Tasks, Status=\"未\"), \"ReceivedAt\", Descending)), {Status:\"対応中\"})",
+    "focus": "対象特定：Filter+Sort+First",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "複数候補から1件を決める：Filter→SortByColumns→First。"
+  },
+  {
+    "id": 27,
+    "prompt": "保存ボタンで、ID=varId の行の DueDate を DateAdd(Today(), 7) に更新せよ。",
+    "expected": "Patch(Tasks, LookUp(Tasks, ID=varId), {DueDate:DateAdd(Today(), 7)})",
+    "focus": "日付：DateAdd",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "DateAdd(日付, 日数) で加算。+7でも可だがDateAddの方が意図が明確。"
+  },
+  {
+    "id": 28,
+    "prompt": "保存ボタンで、Title=txtKey.Text の行が存在する場合のみ Status を更新せよ。",
+    "expected": "If(!IsBlank(LookUp(Tasks, Title=txtKey.Text)), Patch(Tasks, LookUp(Tasks, Title=txtKey.Text), {Status:\"完了\"}))",
+    "focus": "存在チェック：LookUp+IsBlank",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "LookUpが空なら更新できない。先に存在確認する。"
+  },
+  {
+    "id": 29,
+    "prompt": "保存ボタンで、Title=txtKey.Text の行が無い場合は新規作成し、ある場合は更新せよ（Upsert）。",
+    "expected": "Patch(Tasks, Coalesce(LookUp(Tasks, Title=txtKey.Text), Defaults(Tasks)), {Title:txtKey.Text, Status:\"未\"})",
+    "focus": "Upsert：Coalesce",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Coalesce(値1, 値2) は最初に空でない方を返す。LookUpが空ならDefaultsで作成へ。"
+  },
+  {
+    "id": 30,
+    "prompt": "保存ボタンで、varRec に更新後レコードを保存せよ（Title更新）。",
+    "expected": "Set(varRec, Patch(Tasks, ThisItem, {Title:txtTitle.Text}))",
+    "focus": "戻り値：Patch→Set",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "Patchは更新後レコードを返す。Setで保持するとIDや列値を後で使える。"
+  },
+
+  {
+    "id": 31,
+    "prompt": "保存ボタンで、更新後レコードを ctxRec に保存せよ（UpdateContext使用）。",
+    "expected": "UpdateContext({ctxRec: Patch(Tasks, ThisItem, {Status:\"完了\"})})",
+    "focus": "戻り値：Patch→UpdateContext",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "UpdateContextは画面内だけの変数（コンテキスト変数）を作る。"
+  },
+  {
+    "id": 32,
+    "prompt": "保存ボタンで、Titleが空なら通知し、空でなければ更新せよ。",
+    "expected": "If(IsBlank(Trim(txtTitle.Text)), Notify(\"Titleを入力してください\", NotificationType.Error), Patch(Tasks, ThisItem, {Title:txtTitle.Text}))",
+    "focus": "入力チェック：If+Notify",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "実務ではPatch前に入力チェック。Notifyでユーザーへエラーを伝える。"
+  },
+  {
+    "id": 33,
+    "prompt": "保存ボタンで、Priorityが数値でなければ通知し、数値なら更新せよ。",
+    "expected": "If(IsNumeric(txtPri.Text), Patch(Tasks, ThisItem, {Priority:Value(txtPri.Text)}), Notify(\"Priorityは数値です\", NotificationType.Error))",
+    "focus": "入力チェック：IsNumeric",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "IsNumericで数値判定。OKならValueで変換してPatch。"
+  },
+  {
+    "id": 34,
+    "prompt": "保存ボタンで、Status が「完了」のときは更新せず通知、それ以外は更新せよ。",
+    "expected": "If(ThisItem.Status=\"完了\", Notify(\"完了は変更不可\", NotificationType.Information), Patch(Tasks, ThisItem, {Status:\"対応中\"}))",
+    "focus": "状態によるガード",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "業務ルールをIfでガードしてからPatchする。"
+  },
+  {
+    "id": 35,
+    "prompt": "保存ボタンで、Status が ddStatus.Selected.Value のときだけ更新せよ（同じなら何もしない）。",
+    "expected": "If(ThisItem.Status<>ddStatus.Selected.Value, Patch(Tasks, ThisItem, {Status:ddStatus.Selected.Value}))",
+    "focus": "差分更新",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "無駄な更新を避ける：差分がある時だけPatch。"
+  },
+
+  {
+    "id": 36,
+    "prompt": "保存ボタンで、更新後にフォームをリセットせよ（ResetForm(frmEdit)）。",
+    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text}); ResetForm(frmEdit)",
+    "focus": "保存後処理：ResetForm",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "セミコロンで複数処理を順に実行。Patch→ResetFormで入力状態を初期化。"
+  },
+  {
+    "id": 37,
+    "prompt": "保存ボタンで、更新後に Navigate(scrList) で画面遷移せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Navigate(scrList)",
+    "focus": "保存後処理：画面遷移",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "保存ボタンのOnSelectで、更新後に遷移するのが基本。"
+  },
+  {
+    "id": 38,
+    "prompt": "画面表示時に、varId を 1 にセットせよ。",
+    "expected": "Set(varId, 1)",
+    "focus": "初期化：Set",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "画面起動時の変数初期化はOnVisibleに置く。"
+  },
+  {
+    "id": 39,
+    "prompt": "画面表示時に、ctxMode を \"edit\" にする（UpdateContext）。",
+    "expected": "UpdateContext({ctxMode:\"edit\"})",
+    "focus": "初期化：UpdateContext",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "画面内状態（モードなど）はUpdateContextが扱いやすい。"
+  },
+  {
+    "id": 40,
+    "prompt": "表示用ラベルの Text に、ThisItem.Title を表示せよ。",
+    "expected": "ThisItem.Title",
+    "focus": "プロパティ：Text",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Text",
+    "explain": "ラベルの表示はTextプロパティ。処理ではなく式を書く。"
+  },
+
+  {
+    "id": 41,
+    "prompt": "ギャラリーの Items に、Status=\"未\" の行だけを表示せよ。",
+    "expected": "Filter(Tasks, Status=\"未\")",
+    "focus": "プロパティ：Items",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Items",
+    "explain": "ギャラリーのデータ供給はItems。Filterで絞る。"
+  },
+  {
+    "id": 42,
+    "prompt": "ボタンの Visible を、ctxMode=\"edit\" のときだけ true にせよ。",
+    "expected": "ctxMode=\"edit\"",
+    "focus": "プロパティ：Visible",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Visible",
+    "explain": "Visibleは真偽値式。条件式をそのまま返せばOK。"
+  },
+  {
+    "id": 43,
+    "prompt": "保存ボタンで、更新後レコードの ID を varNewId に保存せよ（Title更新）。",
+    "expected": "Set(varNewId, Patch(Tasks, ThisItem, {Title:txtTitle.Text}).ID)",
+    "focus": "戻り値：Patch().ID",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "Patchはレコードを返すので .ID でIDを取れる。"
+  },
+  {
+    "id": 44,
+    "prompt": "保存ボタンで、新規作成したレコードを varRec に保存せよ。",
+    "expected": "Set(varRec, Patch(Tasks, Defaults(Tasks), {Title:txtTitle.Text, Status:\"未\"}))",
+    "focus": "新規作成の戻り値",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "作成後のIDなどを使うなら、戻り値レコードを変数に保存する。"
+  },
+  {
+    "id": 45,
+    "prompt": "保存ボタンで、新規作成後、そのIDをMemoに追記して再Patchせよ。",
+    "expected": "Set(varRec, Patch(Tasks, Defaults(Tasks), {Title:\"新規\"})); Patch(Tasks, varRec, {Memo:\"ID:\" & Text(varRec.ID)})",
+    "focus": "2段Patch：ID取得→再更新",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "作成直後にIDを使うパターン。1回目PatchでvarRec取得→2回目Patchで追記。"
+  },
+
+  {
+    "id": 46,
+    "prompt": "保存ボタンで、ThisItem の Status を Switch で分岐し更新せよ（\"未\"→\"対応中\"、\"対応中\"→\"完了\"、それ以外はそのまま）。",
+    "expected": "Patch(Tasks, ThisItem, {Status:Switch(ThisItem.Status, \"未\", \"対応中\", \"対応中\", \"完了\", ThisItem.Status)})",
+    "focus": "Switchで値決定",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "更新値を作る部分にSwitchを入れる。Patch自体は同じ。"
+  },
+  {
+    "id": 47,
+    "prompt": "保存ボタンで、txtTitle.Text が \"\" ならNotifyし、それ以外なら Title を更新せよ（IsBlank使用）。",
+    "expected": "If(IsBlank(txtTitle.Text), Notify(\"Title必須\", NotificationType.Error), Patch(Tasks, ThisItem, {Title:txtTitle.Text}))",
+    "focus": "入力チェック：IsBlank",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "IsBlankは空かどうか。Trimと組み合わせるとさらに実務的。"
+  },
+  {
+    "id": 48,
+    "prompt": "保存ボタンで、Title と Memo を更新し、最後に Refresh(Tasks) を実行せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text, Memo:txtMemo.Text}); Refresh(Tasks)",
+    "focus": "Refresh",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "外部更新を確実に反映したい場面でRefresh。ただし多用は重いので注意。"
+  },
+  {
+    "id": 49,
+    "prompt": "保存ボタンで、エラー時に通知するため Errors(Tasks, ThisItem) を varErr に保存せよ。",
+    "expected": "Set(varErr, Errors(Tasks, ThisItem))",
+    "focus": "Errors関数の基礎",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "Errors(データソース, レコード)で直近のエラー情報を取得できる。"
+  },
+  {
+    "id": 50,
+    "prompt": "保存ボタンで、Patchが成功したら Notify(\"保存OK\")、失敗したら Notify(\"保存NG\") を出せ。",
+    "expected": "If(IsEmpty(Errors(Tasks, ThisItem)), Notify(\"保存OK\", NotificationType.Success), Notify(\"保存NG\", NotificationType.Error))",
+    "focus": "成功/失敗通知（概念）",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "本来はPatch直後の戻り値やErrorsを見て判断する。ここではErrorsの空/非空で分岐する練習。"
+  },
+
+  {
+    "id": 51,
+    "prompt": "保存ボタンで、Status=\"未\" の行を全て \"対応中\" に更新せよ（ForAll）。",
+    "expected": "ForAll(Filter(Tasks, Status=\"未\"), Patch(Tasks, ThisRecord, {Status:\"対応中\"}))",
+    "focus": "一括更新：ForAll+Patch",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "ThisRecordはForAllの現在行。コレクション/データソースの一括更新で定番。"
+  },
+  {
+    "id": 52,
+    "prompt": "保存ボタンで、Priority>=3 の行を全て \"注意\" に更新せよ。",
+    "expected": "ForAll(Filter(Tasks, Priority>=3), Patch(Tasks, ThisRecord, {Status:\"注意\"}))",
+    "focus": "一括更新：条件付き",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Filter条件を変えるだけで対象を変えられる。"
+  },
+  {
+    "id": 53,
+    "prompt": "保存ボタンで、colSelected（選択済みコレクション）の各行を Tasks に反映せよ（ThisRecord.IDでLookUpして更新）。",
+    "expected": "ForAll(colSelected, Patch(Tasks, LookUp(Tasks, ID=ThisRecord.ID), {Status:ThisRecord.Status}))",
+    "focus": "コレクション→SharePoint反映",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "一括保存の基本。コレクションのIDで本体をLookUpしPatchする。"
+  },
+  {
+    "id": 54,
+    "prompt": "保存ボタンで、ThisItem を更新してから、その結果レコードを Collect(colLog, …) でログ保存せよ（TitleとNow）。",
+    "expected": "Set(varRec, Patch(Tasks, ThisItem, {Status:\"完了\"})); Collect(colLog, {Title:varRec.Title, At:Now()})",
+    "focus": "ログ設計：Collect",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Patchの戻り値を使ってログ。Collectはコレクションへ追加。"
+  },
+  {
+    "id": 55,
+    "prompt": "画面表示時に、colLog を Clear(colLog) で初期化せよ。",
+    "expected": "Clear(colLog)",
+    "focus": "初期化：Clear",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "画面に入った時にログ/作業用コレクションを初期化するのはOnVisibleが定番。"
+  },
+
+  {
+    "id": 56,
+    "prompt": "保存ボタンで、複数処理（Patch→Notify→Navigate）を順番に実行せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Notify(\"保存しました\", NotificationType.Success); Navigate(scrList)",
+    "focus": "セミコロンで手順化",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Power Fxは ; で順番実行。"
+  },
+  {
+    "id": 57,
+    "prompt": "保存ボタンで、Patchの結果が空なら通知して中断し、空でなければ続けよ（戻り値チェック）。",
+    "expected": "Set(varRec, Patch(Tasks, ThisItem, {Title:txtTitle.Text})); If(IsBlank(varRec), Notify(\"失敗\", NotificationType.Error), Notify(\"成功\", NotificationType.Success))",
+    "focus": "戻り値チェックの考え方",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "実務ではErrors確認の方が確実だが、戻り値を変数に置く習慣は重要。"
+  },
+  {
+    "id": 58,
+    "prompt": "保存ボタンで、フォーム入力の txtTitle と txtMemo を Reset せよ（Reset関数）。",
+    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text, Memo:txtMemo.Text}); Reset(txtTitle); Reset(txtMemo)",
+    "focus": "Resetコントロール",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Reset(コントロール)は入力を初期状態へ。"
+  },
+  {
+    "id": 59,
+    "prompt": "保存ボタンで、ctxDirty を false にせよ（UpdateContext）。",
+    "expected": "UpdateContext({ctxDirty:false})",
+    "focus": "状態フラグ",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "画面内の状態フラグはUpdateContextで管理すると扱いやすい。"
+  },
+  {
+    "id": 60,
+    "prompt": "txtTitle の OnChange で、ctxDirty を true にせよ。",
+    "expected": "UpdateContext({ctxDirty:true})",
+    "focus": "イベント：OnChangeの考え方",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "本来はOnChangeに置くが、ここでは『イベント側に状態を立てる』考え方の練習。実装では txtTitle.OnChange に書く。"
+  },
+
+  {
+    "id": 61,
+    "prompt": "保存ボタンで、Statusが\"完了\"なら保存せず、\"未\"なら\"対応中\"へ更新せよ。",
+    "expected": "If(ThisItem.Status=\"完了\", Notify(\"完了は変更不可\", NotificationType.Information), Patch(Tasks, ThisItem, {Status:\"対応中\"}))",
+    "focus": "業務ルール分岐",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Patch前にIfでガードするのが実務の基本。"
+  },
+  {
+    "id": 62,
+    "prompt": "保存ボタンで、DueDateが過去なら通知し、未来なら更新せよ。",
+    "expected": "If(DateValue(txtDue.Text) < Today(), Notify(\"過去日は不可\", NotificationType.Error), Patch(Tasks, ThisItem, {DueDate:DateValue(txtDue.Text)}))",
+    "focus": "日付入力：DateValue",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "文字から日付にするならDateValue。日付の大小比較もできる。"
+  },
+  {
+    "id": 63,
+    "prompt": "保存ボタンで、Priorityが 1〜5 の範囲外なら通知、範囲内なら更新せよ。",
+    "expected": "If(Or(Value(txtPri.Text)<1, Value(txtPri.Text)>5), Notify(\"1〜5で入力\", NotificationType.Error), Patch(Tasks, ThisItem, {Priority:Value(txtPri.Text)}))",
+    "focus": "範囲チェック：Or",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Or(条件1, 条件2)で範囲外判定。"
+  },
+  {
+    "id": 64,
+    "prompt": "保存ボタンで、Titleが空でなければ更新し、更新後にNotifyでTitleを表示せよ。",
+    "expected": "If(!IsBlank(Trim(txtTitle.Text)), Set(varRec, Patch(Tasks, ThisItem, {Title:txtTitle.Text})); Notify(\"保存:\" & varRec.Title, NotificationType.Success))",
+    "focus": "更新後値の活用",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Patchの戻り値（更新後レコード）を使うと、保存後表示などが簡単。"
+  },
+  {
+    "id": 65,
+    "prompt": "保存ボタンで、Status を ddStatus.Selected.Value に更新し、同時に UpdatedAt=Now() も更新せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:ddStatus.Selected.Value, UpdatedAt:Now()})",
+    "focus": "複合更新：状態+監査",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "よくある「状態更新＋更新日時」セット。"
+  },
+
+  {
+    "id": 66,
+    "prompt": "画面表示時に、未完了件数を数えて ctxCount に入れよ。",
+    "expected": "UpdateContext({ctxCount: CountRows(Filter(Tasks, Status<>\"完了\"))})",
+    "focus": "集計：CountRows",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "初期表示で集計値を作るならOnVisible。CountRows(Filter(...))で件数。"
+  },
+  {
+    "id": 67,
+    "prompt": "表示用ラベルの Text に、\"未完了:\" & Text(ctxCount) を表示せよ。",
+    "expected": "\"未完了:\" & Text(ctxCount)",
+    "focus": "表示：Text結合",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Text",
+    "explain": "表示用はTextプロパティ。数値はTextで文字化。"
+  },
+  {
+    "id": 68,
+    "prompt": "ギャラリーの Items に、Priority の高い順で表示せよ。",
+    "expected": "SortByColumns(Tasks, \"Priority\", Descending)",
+    "focus": "並び替え：SortByColumns",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Items",
+    "explain": "ギャラリー表示順はItemsで制御。"
+  },
+  {
+    "id": 69,
+    "prompt": "ギャラリーの Items に、検索キーワード txtSearch.Text を Title に含む行だけ表示せよ。",
+    "expected": "Filter(Tasks, txtSearch.Text in Title)",
+    "focus": "検索：in演算子",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Items",
+    "explain": "「txtSearch.Text in Title」で部分一致検索。"
+  },
+  {
+    "id": 70,
+    "prompt": "ボタンの Visible を、CountRows(Tasks)=0 のときだけ true にせよ。",
+    "expected": "CountRows(Tasks)=0",
+    "focus": "Visible：件数条件",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Visible",
+    "explain": "Visibleはtrue/falseを返す式を書く。"
+  },
+
+  {
+    "id": 71,
+    "prompt": "保存ボタンで、ThisItem の Title が \"\" なら処理をやめ、それ以外ならPatchせよ（戻り：false/trueを返すイメージ）。",
+    "expected": "If(IsBlank(Trim(txtTitle.Text)), Notify(\"Title必須\", NotificationType.Error), Patch(Tasks, ThisItem, {Title:txtTitle.Text}))",
+    "focus": "早期ガード",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Power Fxは戻り値を返すが、UIイベントは『処理の流れ』が重要。まずガード→Patch。"
+  },
+  {
+    "id": 72,
+    "prompt": "保存ボタンで、Patch後に varLastSavedAt に Now() を保存せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Set(varLastSavedAt, Now())",
+    "focus": "保存時刻の記録",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "全体で使うならSetでグローバル変数に。"
+  },
+  {
+    "id": 73,
+    "prompt": "表示用ラベルの Text に、Text(varLastSavedAt, \"yyyy/mm/dd hh:mm\") を表示せよ。",
+    "expected": "Text(varLastSavedAt, \"yyyy/mm/dd hh:mm\")",
+    "focus": "日時表示フォーマット",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Text",
+    "explain": "Text(日時, フォーマット) で表示を整える。"
+  },
+  {
+    "id": 74,
+    "prompt": "保存ボタンで、ThisItem の Status を \"完了\" にし、同時に Done=true にせよ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", Done:true})",
+    "focus": "複数列更新（状態+フラグ）",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "列が違っても第3引数のレコードに並べれば同時更新。"
+  },
+  {
+    "id": 75,
+    "prompt": "保存ボタンで、ThisItem の Memo に \"保存:\" & Now() を保存せよ（NowをTextで）。",
+    "expected": "Patch(Tasks, ThisItem, {Memo:\"保存:\" & Text(Now(), \"yyyy/mm/dd hh:mm\")})",
+    "focus": "文字列+日時",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "日時はTextで文字列化してから連結。"
+  },
+
+  {
+    "id": 76,
+    "prompt": "保存ボタンで、Status=\"未\" の行を全て完了にし、完了数を varDone に保存せよ。",
+    "expected": "Set(varDone, CountRows(Filter(Tasks, Status=\"未\"))); ForAll(Filter(Tasks, Status=\"未\"), Patch(Tasks, ThisRecord, {Status:\"完了\"}))",
+    "focus": "一括更新+件数記録",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "先に対象件数を数えて保存→一括Patch。順番が大事。"
+  },
+  {
+    "id": 77,
+    "prompt": "画面表示時に、colWrong を ClearCollect(colWrong, []) で初期化せよ。",
+    "expected": "Clear(colWrong)",
+    "focus": "苦手管理：初期化",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "苦手リストを画面開始時にクリアしておくと集計が安定する。"
+  },
+  {
+    "id": 78,
+    "prompt": "保存ボタンで、間違えたら colWrong に ThisItem.ID を追加せよ（Collect）。",
+    "expected": "Collect(colWrong, {ID:ThisItem.ID})",
+    "focus": "苦手管理：Collect",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "間違い記録はCollectで追加する設計が多い。"
+  },
+  {
+    "id": 79,
+    "prompt": "ギャラリーの Items に、colWrong の ID に含まれる行だけ表示せよ。",
+    "expected": "Filter(Tasks, ID in colWrong.ID)",
+    "focus": "苦手抽出：in + コレクション列",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Items",
+    "explain": "コレクションの列参照は colWrong.ID。in で含有判定。"
+  },
+  {
+    "id": 80,
+    "prompt": "保存ボタンで、成功時に ctxScore を +1 せよ（UpdateContext）。",
+    "expected": "UpdateContext({ctxScore: ctxScore+1})",
+    "focus": "スコア管理",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "画面内スコアならUpdateContextで十分。"
+  },
+
+  {
+    "id": 81,
+    "prompt": "画面表示時に、ctxScore=0 と ctxTotal=0 を初期化せよ。",
+    "expected": "UpdateContext({ctxScore:0, ctxTotal:0})",
+    "focus": "初期化：複数キー",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnVisible",
+    "explain": "UpdateContext({a:0, b:0})で複数一括初期化。"
+  },
+  {
+    "id": 82,
+    "prompt": "保存ボタンで、判定のたびに ctxTotal を +1 せよ。",
+    "expected": "UpdateContext({ctxTotal: ctxTotal+1})",
+    "focus": "試行数カウント",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "判定回数＝総試行数。画面内管理ならUpdateContext。"
+  },
+  {
+    "id": 83,
+    "prompt": "表示用ラベルの Text に、Round(100*ctxScore/ctxTotal, 0) & \"%\" を表示せよ（0除算はIfで回避）。",
+    "expected": "If(ctxTotal=0, \"0%\", Text(Round(100*ctxScore/ctxTotal, 0)) & \"%\")",
+    "focus": "正解率表示",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Text",
+    "explain": "0除算を避けるため ctxTotal=0 を先に処理。"
+  },
+  {
+    "id": 84,
+    "prompt": "保存ボタンで、保存後に最新レコードを Refresh して varRec を再取得せよ（IDでLookUp）。",
+    "expected": "Set(varRec, Patch(Tasks, ThisItem, {Status:\"完了\"})); Refresh(Tasks); Set(varRec, LookUp(Tasks, ID=varRec.ID))",
+    "focus": "再取得：Refresh+LookUp",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "SharePoint側で自動計算列などがある場合、Refresh後に再取得する設計がある。"
+  },
+  {
+    "id": 85,
+    "prompt": "保存ボタンで、Patch後にエラーがあれば最初のエラーメッセージをNotifyせよ。",
+    "expected": "If(!IsEmpty(Errors(Tasks, ThisItem)), Notify(First(Errors(Tasks, ThisItem)).Message, NotificationType.Error))",
+    "focus": "エラー表示：First().Message",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Errorsはテーブルを返す。Firstで先頭行、.Messageでメッセージ。"
+  },
+
+  {
+    "id": 86,
+    "prompt": "保存ボタンで、Patch前に確認ダイアログを出す代わりに ctxConfirm=true を立てよ。",
+    "expected": "UpdateContext({ctxConfirm:true})",
+    "focus": "確認フローの土台",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "実務では確認UIをVisibleで出す。まず状態フラグを立てる。"
+  },
+  {
+    "id": 87,
+    "prompt": "確認用パネルの Visible を ctxConfirm=true にせよ。",
+    "expected": "ctxConfirm=true",
+    "focus": "Visible：確認UI",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Visible",
+    "explain": "Visibleは状態フラグで制御するのが基本。"
+  },
+  {
+    "id": 88,
+    "prompt": "確認OKボタンの OnSelect で、Patchを実行し ctxConfirm=false に戻せ。",
+    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); UpdateContext({ctxConfirm:false})",
+    "focus": "確認OKの実行",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "確認OKはボタンのOnSelectに書く。実行後にフラグを戻す。"
+  },
+  {
+    "id": 89,
+    "prompt": "確認キャンセルボタンの OnSelect で、ctxConfirm=false に戻せ。",
+    "expected": "UpdateContext({ctxConfirm:false})",
+    "focus": "確認キャンセル",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "キャンセルは状態フラグを戻すだけ。"
+  },
+  {
+    "id": 90,
+    "prompt": "保存ボタンで、ctxSaving=true を立て、Patch後に false に戻せ。",
+    "expected": "UpdateContext({ctxSaving:true}); Patch(Tasks, ThisItem, {Status:\"完了\"}); UpdateContext({ctxSaving:false})",
+    "focus": "保存中フラグ",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "保存中表示（スピナー等）は ctxSaving を Visible に結びつける。"
+  },
+
+  {
+    "id": 91,
+    "prompt": "保存ボタンの DisplayMode を、ctxSaving=true のとき Disabled にせよ。",
+    "expected": "If(ctxSaving, DisplayMode.Disabled, DisplayMode.Edit)",
+    "focus": "DisplayMode制御",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Text",
+    "explain": "本来はDisplayModeプロパティだが、考え方は『状態で制御』。Disabledにすると連打防止。"
+  },
+  {
+    "id": 92,
+    "prompt": "保存ボタンで、ThisItem の Status を \"完了\" に更新し、完了した行だけをギャラリーで表示せよ（Items式）。",
+    "expected": "Filter(Tasks, Status=\"完了\")",
+    "focus": "完了フィルタ",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Items",
+    "explain": "表示側（Items）で完了だけに絞る。Patchは別で行う。"
+  },
+  {
+    "id": 93,
+    "prompt": "保存ボタンで、Title=txtTitle.Text の行が複数ある可能性を避けるため、ID=varId で更新せよ。",
+    "expected": "Patch(Tasks, LookUp(Tasks, ID=varId), {Title:txtTitle.Text})",
+    "focus": "一意キー設計：ID優先",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Titleは重複し得る。確実に1件を指すならIDを使うのが設計として安全。"
+  },
+  {
+    "id": 94,
+    "prompt": "保存ボタンで、更新対象を LookUp で取得してから Patch する（2段）形にせよ。",
+    "expected": "Set(varRec, LookUp(Tasks, ID=varId)); Patch(Tasks, varRec, {Status:\"完了\"})",
+    "focus": "2段：LookUp→Patch",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "Set",
+    "explain": "対象レコードを一度変数に置くと、デバッグしやすく読みやすい。"
+  },
+  {
+    "id": 95,
+    "prompt": "保存ボタンで、varRec が空なら新規作成、空でなければ更新せよ（varRecを対象にCoalesce）。",
+    "expected": "Patch(Tasks, Coalesce(varRec, Defaults(Tasks)), {Title:txtTitle.Text, Status:\"未\"})",
+    "focus": "Upsert：既存変数を使う",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "varRecが既存なら更新、空ならDefaultsで作成。Coalesceで切替。"
+  },
+
+  {
+    "id": 96,
+    "prompt": "保存ボタンで、入力をまとめたレコード r を作ってから Patch せよ（With使用）。",
+    "expected": "With({r:{Title:txtTitle.Text, Status:ddStatus.Selected.Value}}, Patch(Tasks, ThisItem, r))",
+    "focus": "Withで見通し改善",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "Withで一時変数（レコード）を作るとPatchが読みやすくなる。"
+  },
+  {
+    "id": 97,
+    "prompt": "保存ボタンで、複数列の更新内容を UpdateIf ではなく Patch で表現せよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text, Memo:txtMemo.Text, UpdatedAt:Now()})",
+    "focus": "Patchで複合更新",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "1行更新ならPatchが最も素直。UpdateIfは複数行の条件更新向き。"
+  },
+  {
+    "id": 98,
+    "prompt": "保存ボタンで、更新後に「未返信メール」など別リスト Logs に履歴を追加せよ（新規作成）。",
+    "expected": "Set(varRec, Patch(Tasks, ThisItem, {Status:\"完了\"})); Patch(Logs, Defaults(Logs), {TaskId:varRec.ID, Action:\"完了\", At:Now()})",
+    "focus": "別リストに履歴作成",
+    "place_required": true,
+    "place_group_answer": "OnSelect / OnVisible",
+    "place_answer": "OnSelect",
+    "explain": "実務では本体更新＋履歴（ログ）を別リストに残す設計が多い。"
+  },
+  {
+    "id": 99,
+    "prompt": "保存ボタンで、エラーがなければ ctxDirty=false に戻し、あれば ctxDirty=true のままにせよ。",
+    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text}); If(IsEmpty(Errors(Tasks, ThisItem)), UpdateContext({ctxDirty:false}), UpdateContext({ctxDirty:true}))",
+    "focus": "保存成功でdirty解除",
+    "place_required": true,
+    "place_group_answer": "Set / UpdateContext",
+    "place_answer": "UpdateContext",
+    "explain": "保存が成功したら未保存フラグを下ろす。失敗なら下ろさない。"
+  },
+  {
+    "id": 100,
+    "prompt": "画面表示時に、全件モード用の Items を Tasks、苦手だけモード用の Items を Filter(Tasks, ID in colWrong.ID) に切替せよ（ctxModeで）。",
+    "expected": "If(ctxMode=\"all\", Tasks, Filter(Tasks, ID in colWrong.ID))",
+    "focus": "モード切替：Items",
+    "place_required": true,
+    "place_group_answer": "Text / Items / Visible",
+    "place_answer": "Items",
+    "explain": "表示側（Items）でモード切替するのがシンプル。ctxModeで全件/苦手だけを切り替える。"
+  }
+]
