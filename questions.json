@@ -1,162 +1,81 @@
-[
-  {
-    "id": 1,
-    "prompt": "保存ボタンで、ThisItem の Status を「完了」に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "【Patch】はデータを更新する関数。Tasksはデータソース、ThisItemは今表示している1行。{Status:\"完了\"}は「Status列を完了にする」という意味。保存ボタンなのでOnSelectに書く。"
-  },
-  {
-    "id": 2,
-    "prompt": "保存ボタンで、ThisItem の Title を txtTitle.Text に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Title:txtTitle.Text})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "txtTitle.Textはテキストボックスの入力値。Patchの第3引数で「列:値」として設定する。ThisItemを使うと現在のレコードが更新される。"
-  },
-  {
-    "id": 3,
-    "prompt": "保存ボタンで、新規に Title=\"テスト\" の行を作成せよ。",
-    "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"テスト\"})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Defaults(Tasks)は新規作成用の空レコード。Patchの第2引数にDefaultsを入れると「作成」になる。"
-  },
-  {
-    "id": 4,
-    "prompt": "保存ボタンで、ID=1 のレコードの Status を「完了」に更新せよ。",
-    "expected": "Patch(Tasks, LookUp(Tasks, ID=1), {Status:\"完了\"})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "LookUpは条件に一致する1件を取得する関数。ID=1のレコードを特定し、それをPatchで更新している。"
-  },
-  {
-    "id": 5,
-    "prompt": "保存ボタンで、ThisItem の Progress を数値として更新せよ（txtProgress.Textを使用）。",
-    "expected": "Patch(Tasks, ThisItem, {Progress:Value(txtProgress.Text)})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Text入力は文字列なので、Value()で数値に変換する必要がある。数値列にそのままTextは入れられない。"
-  },
-  {
-    "id": 6,
-    "prompt": "保存ボタンで、ThisItem の Done を true に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Done:true})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Yes/No列はtrue/falseで更新する。文字列ではない点に注意。"
-  },
-  {
-    "id": 7,
-    "prompt": "保存ボタンで、ThisItem の DueDate を Today()+1 に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {DueDate:Today()+1})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Today()は今日の日付。+1で翌日になる。日付計算もそのままPatchに書ける。"
-  },
-  {
-    "id": 8,
-    "prompt": "保存ボタンで、ThisItem の Status を ddStatus.Selected.Value に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Status:ddStatus.Selected.Value})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "ドロップダウンの選択値は Selected.Value で取得する。これをそのまま列に入れる。"
-  },
-  {
-    "id": 9,
-    "prompt": "保存ボタンで、ThisItem の Title を Trim(txtTitle.Text) に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Title:Trim(txtTitle.Text)})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Trimは前後の空白を削除する関数。入力ミス対策としてよく使う。"
-  },
-  {
-    "id": 10,
-    "prompt": "保存ボタンで、ThisItem の Memo を既存Memo + 改行 + 現在日時に更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Memo:Coalesce(ThisItem.Memo, \"\") & Char(10) & Text(Now())})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Coalesceは空なら代替値を使う関数。Char(10)は改行。Text(Now())で日時を文字列化して追記する。"
-  },
-  {
-    "id": 11,
-    "prompt": "保存ボタンで、ThisItem の Status を「完了」、Done を true に同時更新せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\", Done:true})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Patchの第3引数に複数の列を書くことで、同時に更新できる。"
-  },
-  {
-    "id": 12,
-    "prompt": "保存ボタンで、Title=\"A\" のレコードの Priority を 5 に更新せよ。",
-    "expected": "Patch(Tasks, LookUp(Tasks, Title=\"A\"), {Priority:5})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "LookUpは1件取得。条件に一致する行を特定して更新する。"
-  },
-  {
-    "id": 13,
-    "prompt": "保存ボタンで、新規に Title=\"新規\" Status=\"未\" の行を作成せよ。",
-    "expected": "Patch(Tasks, Defaults(Tasks), {Title:\"新規\", Status:\"未\"})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Defaultsを使うと新規作成。複数列も同時に設定できる。"
-  },
-  {
-    "id": 14,
-    "prompt": "保存ボタンで、ThisItem の Status をトグル（反転）せよ。",
-    "expected": "Patch(Tasks, ThisItem, {Done:!ThisItem.Done})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "!は否定。true→false、false→trueに切り替える。"
-  },
-  {
-    "id": 15,
-    "prompt": "保存ボタンで、ThisItem の Status を Ifで条件分岐して更新せよ（Done=trueなら完了）。",
-    "expected": "Patch(Tasks, ThisItem, {Status:If(ThisItem.Done=true, \"完了\", \"未\")})",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "If(条件, 真のとき, 偽のとき)。条件によって値を変えられる。"
-  },
-  {
-    "id": 16,
-    "prompt": "保存ボタンで、更新後のレコードを varRec に保存せよ。",
-    "expected": "Set(varRec, Patch(Tasks, ThisItem, {Status:\"完了\"}))",
-    "place_required": true,
-    "place_answer": "Set",
-    "explain": "Patchは更新後のレコードを返す。その結果をSetで変数に保存できる。"
-  },
-  {
-    "id": 17,
-    "prompt": "保存ボタンで、更新後のIDを varId に保存せよ。",
-    "expected": "Set(varId, Patch(Tasks, ThisItem, {Status:\"完了\"}).ID)",
-    "place_required": true,
-    "place_answer": "Set",
-    "explain": "Patchの戻り値はレコード。そこから.IDでIDを取り出せる。"
-  },
-  {
-    "id": 18,
-    "prompt": "保存ボタンで、Status=\"未\" の全レコードを「完了」に更新せよ。",
-    "expected": "ForAll(Filter(Tasks, Status=\"未\"), Patch(Tasks, ThisRecord, {Status:\"完了\"}))",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "Filterで対象を絞り、ForAllで1件ずつPatchすることで一括更新できる。"
-  },
-  {
-    "id": 19,
-    "prompt": "保存ボタンで、Titleが空ならエラー表示、そうでなければ更新せよ。",
-    "expected": "If(IsBlank(Trim(txtTitle.Text)), Notify(\"エラー\", NotificationType.Error), Patch(Tasks, ThisItem, {Title:txtTitle.Text}))",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "IsBlankで空チェック、Notifyでエラー表示。問題なければPatchを実行。"
-  },
-  {
-    "id": 20,
-    "prompt": "保存ボタンで、更新後にフォームをリセットせよ。",
-    "expected": "Patch(Tasks, ThisItem, {Status:\"完了\"}); Reset(txtTitle)",
-    "place_required": true,
-    "place_answer": "OnSelect",
-    "explain": "セミコロンで処理をつなげる。Patch後にResetで入力欄をクリア。"
-  }
-]
+,
+{
+"id":201,
+"prompt":"保存ボタンで、ThisItem の Title を「A」に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {Title:\"A\"})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"Patchは表→行→変更の順。ThisItemは現在の行。"
+},
+{
+"id":202,
+"prompt":"保存ボタンで、ThisItem の Memo を txtMemo.Text に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {Memo:txtMemo.Text})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"入力値は .Text で取得する。"
+},
+{
+"id":203,
+"prompt":"保存ボタンで、ThisItem の Priority を数値として更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {Priority:Value(txtP.Text)})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"数値列にはValue()で変換が必要。"
+},
+{
+"id":204,
+"prompt":"保存ボタンで、新規に Title=\"新規\" の行を作成せよ。",
+"expected":"Patch(Tasks, Defaults(Tasks), {Title:\"新規\"})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"Defaultsを第2引数に入れると作成になる。"
+},
+{
+"id":205,
+"prompt":"保存ボタンで、ThisItem の Done を true に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {Done:true})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"Yes/No列はtrue/falseで更新。"
+},
+{
+"id":206,
+"prompt":"保存ボタンで、ThisItem の Done を反転せよ。",
+"expected":"Patch(Tasks, ThisItem, {Done:!ThisItem.Done})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"!は否定。"
+},
+{
+"id":207,
+"prompt":"保存ボタンで、ThisItem の DueDate を Today() に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {DueDate:Today()})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"Today()は今日の日付。"
+},
+{
+"id":208,
+"prompt":"保存ボタンで、ThisItem の DueDate を Today()+1 に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {DueDate:Today()+1})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"+1で翌日。"
+},
+{
+"id":209,
+"prompt":"保存ボタンで、ThisItem の Title を Trim(txtTitle.Text) に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {Title:Trim(txtTitle.Text)})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"Trimは空白削除。"
+},
+{
+"id":210,
+"prompt":"保存ボタンで、ThisItem の Status を ddStatus.Selected.Value に更新せよ。",
+"expected":"Patch(Tasks, ThisItem, {Status:ddStatus.Selected.Value})",
+"place_required":true,
+"place_answer":"OnSelect",
+"explain":"ドロップダウンはSelected.Value。"
+}
